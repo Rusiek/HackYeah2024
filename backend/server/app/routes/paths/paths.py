@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 import requests
 import json
 import os
+import ast
 
 bp_paths = Blueprint('paths', __name__)
 
@@ -26,5 +27,24 @@ def get_path():
   response_dict = {}
   response_dict['paths'] = paths_array
 
+
+  return jsonify(response_dict)
+
+file_path = os.path.join(os.path.dirname(__file__), 'velo.txt')
+
+@bp_paths.route('/<id>', methods=['GET'])
+def get_path_by_id(id):
+  with open(file_path, 'r', encoding='utf-8') as file:
+        content = file.read().strip()
+
+    # Use ast.literal_eval for safe evaluation
+  data = ast.literal_eval(content)
+  
+  array = data[int(id)]
+
+  array = [list(x) for x in array]
+
+  response_dict = {}
+  response_dict['path'] = array
 
   return jsonify(response_dict)

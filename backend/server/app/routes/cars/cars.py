@@ -27,7 +27,7 @@ def get_cars():
       params = {
       'in': f'bbox:{poly[0][1]},{poly[0][0]},{poly[1][1]},{poly[1][0]}',
       'locationReferencing': 'shape',
-      'apiKey': f'{current_app.config.get('HERE_API_KEY')}'
+      'apiKey': f"{current_app.config.get('HERE_API_KEY')}"
       }
       res = requests.get(base_url, params=params)
       res.raise_for_status()  
