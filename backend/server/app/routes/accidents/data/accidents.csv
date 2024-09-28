@@ -1,4 +1,4 @@
-ID,wsp_gps_x,wsp_gps_y,ciezkosc,mie_nazwa,gmi_nazwa,pow_nazwa,woj_nazwa
+ID,long,lat,weight,location,commune,district,voivodeship
 212329303,20.498333,50.0569166,C,Bogucice,Bochnia,bocheński,MAŁOPOLSKIE
 207124652,20.3197493,49.952,C,Bogucice,Bochnia,bocheński,MAŁOPOLSKIE
 207216712,20.4272771,49.9746937,L,Bogucice,Bochnia,bocheński,MAŁOPOLSKIE
