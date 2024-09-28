@@ -19,14 +19,14 @@ file_path = os.path.join(os.path.dirname(__file__), 'data/traffic_data.json')
 @bp_cars.route('/', methods=['GET'])
 def get_cars_flow():
     if(not current_app.config.get("HERE_API_KEY")):
-      return jsonify({'error': 'Authentication error', 'messege': 'No API key provided', 'code': '404'}), 404
+      return jsonify({'error': {'type': 'Authentication error', 'messege': 'No API key provided'}, 'code': '401 '}), 401
     base_url = current_app.config.get('HERE_API_FLOW_URL')
     
     # for each rectangular area get traffic data
     result_dict = {
-    'results': [],
-    'sourceUpdated': ''
-  }
+      'results': [],
+      'sourceUpdated': ''
+    }
     try:
       for poly in rects:
         params = {
@@ -43,12 +43,12 @@ def get_cars_flow():
         result_dict['sourceUpdated'] = data.get('sourceUpdated')
         
     except requests.exceptions.HTTPError as http_err:
-      return jsonify({'error': 'HTTP error', 'messege': str(http_err), 'code': '404'}), 404
+      return jsonify({'error': {'type': 'HTTP Error', 'messege': str(http_err)}, 'code': '404'}), 404
     except Exception as err:
-      return jsonify({'error': 'Unexpected Error', 'messege': str(err), 'code': '404'}), 404
+      return jsonify({'error': {'type': 'Unexpected Error', 'messege': str(err)}, 'code': '500 '}), 500
     
     # Write the data to a file (and if file already exists, overwrite it)
     with open(file_path, 'w') as f:
       json.dump(result_dict, f)
 
-    return jsonify("Data fetched and saved to file"), 200
+    return jsonify("Data fetched and saved to file")

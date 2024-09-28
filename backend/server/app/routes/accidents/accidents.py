@@ -14,5 +14,6 @@ def get_accidents():
     try:
       data = json.load(json_file)
     except:
-      return jsonify({'error': 'The resource you requested does not exist', 'messege': 'Could not find accidents file', 'code': '404'}), 404
+      return jsonify({
+        'error': {'type': 'Resource Not Found', 'messege': 'Could not access accidents file'},'code': '404'}), 404
   return jsonify(data)
