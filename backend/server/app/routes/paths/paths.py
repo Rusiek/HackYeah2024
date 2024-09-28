@@ -5,7 +5,7 @@ import os
 import ast
 
 bp_paths = Blueprint('paths', __name__)
-file_path = os.path.join(os.path.dirname(__file__), 'velo.txt')
+file_path = os.path.join(os.path.dirname(__file__), 'data/velo.txt')
 
 @bp_paths.route('/', methods=['GET'])
 def get_path():
