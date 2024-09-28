@@ -4,7 +4,7 @@ import json
 import os
 from .util import calculate_polies
 
-bp_cars = Blueprint('acrs', __name__)
+bp_cars = Blueprint('cars', __name__)
 
 # Area of Małopolska Voivodeship in HERE-API-friendly format
 top_right_lat= 50.60218
