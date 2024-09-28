@@ -9,7 +9,7 @@ const useTripsLayer = () => {
   if (!selectedOption?.[0]) return null
 
   const theme = {
-    trailColor: [15, 230, 35]
+    trailColor: [230, 210, 0]
   };
 
   return new TripsLayer<Trip>({
