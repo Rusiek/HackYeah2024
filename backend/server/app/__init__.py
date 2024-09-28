@@ -3,6 +3,7 @@ from flask import Flask
 import redis.exceptions
 from .Config import Config
 from flask_redis import FlaskRedis
+from flask_cors import CORS
 import redis
 
 # Configure redis
@@ -17,6 +18,7 @@ def create_app(config=Config):
   app = Flask(__name__)
   app.config.from_object(config)
   redis_client.init_app(app)
+  CORS(app, supports_credentials=True)
   
   app.register_blueprint(bp_routes, url_prefix='/test')
   app.register_blueprint(bp_accidents, url_prefix='/accidents')
