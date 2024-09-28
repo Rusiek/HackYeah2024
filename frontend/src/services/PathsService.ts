@@ -19,3 +19,27 @@ export const getPath = () => {
       throw error;
     });
 };
+
+export const getAccidents = () => {
+  return axios.get(`${API_BASE_URL}/accidents/`)
+    .then(response => response.data)
+    .catch(error => {
+      console.error('Error fetching paths:', error);
+      throw error;
+    });
+};
+
+/*
+  [
+    {
+      ID: string,
+      comune: string,
+      district: string,
+      lat: string,
+      long: string,
+      location: string,
+      voivodeship: string,
+      weight: string (C/L/S - Ciezki Lekki Smiertelny)
+    }, itd..
+  ]
+*/

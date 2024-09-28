@@ -7,9 +7,9 @@ import { OBJLoader } from '@loaders.gl/obj';
 import { registerLoaders } from '@loaders.gl/core';
 import { INITIAL_VIEW_STATE } from './utils/MapUtils';
 import { MainContext } from './context/MainContext';
-import { TripsLayer } from '@deck.gl/geo-layers';
-import { animate } from 'popmotion';
 import Overlay from './components/Overlay';
+import useTripsLayer from './hooks/useTripsLayer';
+import useAccidentsLayer from './hooks/useAccidentsLayer';
 
 registerLoaders([OBJLoader]);
 
@@ -20,39 +20,16 @@ const App = () => {
     map: {
       mapViewState, setMapViewState
     },
-    data: {
-      paths
-    },
     settings: {
       coordinatePickingState, setCoordinatePickingState, setStartPosition, setEndPosition
     } } = useContext(MainContext);
 
-  const theme = {
-    buildingColor: [74, 80, 87],
-    trailColor0: [255, 0, 0],
-    trailColor1: [0, 255, 0],
-    material: {
-      ambient: 0.1,
-      diffuse: 0.6,
-      shininess: 32,
-      specularColor: [60, 64, 70]
-    },
-  };
+  const tripsLayer = useTripsLayer()
+  const accidentsLayer = useAccidentsLayer()
 
   const layers = [
-    new TripsLayer<Trip>({
-      id: 'trips',
-      data: paths,
-      getPath: d => d.path,
-      getTimestamps: d => d.timestamps,
-      getColor: d => (d.vendor === 0 ? theme.trailColor0 : theme.trailColor1),
-      opacity: 0.3,
-      widthMinPixels: 2,
-      rounded: true,
-      fadeTrail: false,
-      currentTime: Infinity,
-      shadowEnabled: false
-    })
+    tripsLayer,
+    accidentsLayer
   ];
 
   return (

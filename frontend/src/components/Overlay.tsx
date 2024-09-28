@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState } from 'react';
 import { LuLayers } from "react-icons/lu";
-import { TbRoad } from "react-icons/tb";
+import { FaCarCrash } from "react-icons/fa";
 import { PiRoadHorizon } from "react-icons/pi";
 import { PiRoadHorizonFill } from "react-icons/pi";
 import { MainContext } from '../context/MainContext';
@@ -51,8 +51,8 @@ const Overlay = () => {
           <span>Wszystkie ścieżki</span>
         </button>
         <button onClick={() => changeOption(1)} className={`${selectedOption?.[1] == 1 && "active"}`}>
-          <TbRoad />
-          <span>Trasa - Wariant <b>A</b></span>
+          <FaCarCrash />
+          <span>Wypadki drogowe</span>
         </button>
         <button onClick={() => changeOption(2)} className={`${selectedOption?.[2] == 1 && "active"}`}>
           <PiRoadHorizon />
