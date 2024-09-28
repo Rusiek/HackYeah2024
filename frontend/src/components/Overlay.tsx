@@ -6,10 +6,12 @@ import { FaRoad } from "react-icons/fa";
 import { MainContext } from '../context/MainContext';
 import { IoLocationSharp } from "react-icons/io5";
 import Weather from './Weather';
+import { IoClose } from "react-icons/io5";
 
 const Overlay = () => {
   const { settings: {
-    selectedOption, setSelectedOption, coordinatePickingState, setCoordinatePickingState, startPosition, endPosition
+    selectedOption, setSelectedOption, coordinatePickingState, setCoordinatePickingState, startPosition, endPosition,
+    setStartPosition, setEndPosition
   } } = useContext(MainContext);
 
   const changeOption = (id) => {
@@ -28,23 +30,33 @@ const Overlay = () => {
           <div className="field" onClick={() => {
             setCoordinatePickingState(1)
           }}>
-            {coordinatePickingState == 1 ? <div>Wybierz punkt na mapie...</div> : <div>
-              {startPosition
-                ? <div>{startPosition?.[0].toFixed(5)}, {startPosition?.[1].toFixed(5)}</div>
-                : <div><b>KLIKNIJ</b> aby wybrać</div>}
-            </div>}
+            <div>
+              {coordinatePickingState == 1 ? <div>Wybierz punkt na mapie...</div> : <div>
+                {startPosition
+                  ? <div>{startPosition?.[0].toFixed(5)}, {startPosition?.[1].toFixed(5)}</div>
+                  : <div><b>KLIKNIJ</b> aby wybrać</div>}
+              </div>}
+            </div>
+            <div className="closeIcon" onClick={() => {
+              setStartPosition(null)
+            }}><IoClose /></div>
           </div>
         </div>
         <div className="group">
-          <span className="label labelEnd"><IoLocationSharp /> Punkt końcowy</span>
+          <span className="label labelEnd"><IoLocationSharp /> Punkt docelowy</span>
           <div className="field" onClick={() => {
             setCoordinatePickingState(2)
           }}>
-            {coordinatePickingState == 2 ? <div>Wybierz punkt na mapie...</div> : <div>
-              {endPosition
-                ? <div>{endPosition?.[0].toFixed(5)}, {endPosition?.[1].toFixed(5)}</div>
-                : <div><b>KLIKNIJ</b> aby wybrać</div>}
-            </div>}
+            <div>
+              {coordinatePickingState == 2 ? <div>Wybierz punkt na mapie...</div> : <div>
+                {endPosition
+                  ? <div>{endPosition?.[0].toFixed(5)}, {endPosition?.[1].toFixed(5)}</div>
+                  : <div><b>KLIKNIJ</b> aby wybrać</div>}
+              </div>}
+            </div>
+            <div className="closeIcon" onClick={() => {
+              setEndPosition(null)
+            }}><IoClose /></div>
           </div>
         </div>
         <div className="buttons">
