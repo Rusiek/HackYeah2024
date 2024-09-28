@@ -21,8 +21,20 @@
   & .label {
     font-size: 15px;
     color: white;
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 5px;
     padding-bottom: 5px;
+  }
+
+  & .labelStart svg {
+    color: rgb(3, 110, 135);
+    font-size: 23px;
+  }
+
+  & .labelEnd svg {
+    color: rgb(14, 200, 207);
+    font-size: 23px;
   }
 
   & .group {

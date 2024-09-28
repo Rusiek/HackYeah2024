@@ -10,6 +10,7 @@ import { MainContext } from './context/MainContext';
 import Overlay from './components/Overlay';
 import useTripsLayer from './hooks/useTripsLayer';
 import useAccidentsLayer from './hooks/useAccidentsLayer';
+import useMarkersLayer from './hooks/useMarkersLayer';
 
 registerLoaders([OBJLoader]);
 
@@ -26,10 +27,12 @@ const App = () => {
 
   const tripsLayer = useTripsLayer()
   const accidentsLayer = useAccidentsLayer()
+  const markersLayer = useMarkersLayer()
 
   const layers = [
     tripsLayer,
-    accidentsLayer
+    accidentsLayer,
+    markersLayer
   ];
 
   return (
