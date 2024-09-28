@@ -7,8 +7,16 @@ import { MainContext } from '../context/MainContext';
 
 const Overlay = () => {
   const { settings: {
-    setSelectedOption, coordinatePickingState, setCoordinatePickingState, startPosition, endPosition
+    selectedOption, setSelectedOption, coordinatePickingState, setCoordinatePickingState, startPosition, endPosition
   } } = useContext(MainContext);
+
+  const changeOption = (id) => {
+    setSelectedOption(prev => {
+      const newOption = [...prev]
+      newOption[id] = (newOption[id] + 1) % 2
+      return newOption
+    })
+  }
 
   return (
     <div className="overlay">
@@ -38,19 +46,19 @@ const Overlay = () => {
         </div>
       </div>
       <div className="buttons">
-        <button onClick={() => setSelectedOption(0)}>
+        <button onClick={() => changeOption(0)} className={`${selectedOption?.[0] == 1 && "active"}`}>
           <LuLayers />
           <span>Wszystkie ścieżki</span>
         </button>
-        <button onClick={() => setSelectedOption(1)}>
+        <button onClick={() => changeOption(1)} className={`${selectedOption?.[1] == 1 && "active"}`}>
           <TbRoad />
           <span>Trasa - Wariant <b>A</b></span>
         </button>
-        <button onClick={() => setSelectedOption(2)}>
+        <button onClick={() => changeOption(2)} className={`${selectedOption?.[2] == 1 && "active"}`}>
           <PiRoadHorizon />
           <span>Trasa - Wariant <b>B</b></span>
         </button>
-        <button onClick={() => setSelectedOption(3)}>
+        <button onClick={() => changeOption(3)} className={`${selectedOption?.[3] == 1 && "active"}`}>
           <PiRoadHorizonFill />
           <span>Trasa - Wariant <b>C</b></span>
         </button>

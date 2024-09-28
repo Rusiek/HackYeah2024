@@ -13,7 +13,7 @@ type DataType = {
 }
 
 type SettingsType = {
-  selectedOption: number;
+  selectedOption: number[];
   setSelectedOption: any;
   coordinatePickingState: number;
   setCoordinatePickingState: any;
@@ -38,7 +38,7 @@ export const MainContext = createContext<MainContextType>({
     paths: []
   },
   settings: {
-    selectedOption: 0,
+    selectedOption: [1, 0, 0, 0],
     setSelectedOption: () => { },
     coordinatePickingState: 0,
     setCoordinatePickingState: () => { },
@@ -54,7 +54,7 @@ export const MainContextProvider = ({ children }: {
 }) => {
   const [mapViewState, setMapViewState] = useState<MapViewState>(INITIAL_VIEW_STATE)
   const [paths, setPaths] = useState([])
-  const [selectedOption, setSelectedOption] = useState(0)
+  const [selectedOption, setSelectedOption] = useState([1, 0, 0, 0])
   const [coordinatePickingState, setCoordinatePickingState] = useState(0)
   const [startPosition, setStartPosition] = useState<number[] | null>(null);
   const [endPosition, setEndPosition] = useState<number[] | null>(null);
