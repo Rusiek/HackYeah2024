@@ -10,11 +10,8 @@ bp_accidents = Blueprint('accidents', __name__)
 def get_accidents():
   #open csv file and map it to json
   path_to_csv = os.path.join(os.path.dirname(__file__), 'accidents.csv')
-  data = []
   with open(path_to_csv, 'r', encoding='utf-8') as f:
     reader = csv.DictReader(f)
     rows = list(reader)
-    for row in rows:
-      data.append(row)
 
-  return jsonify(data)
+  return jsonify(rows)
