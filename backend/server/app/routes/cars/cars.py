@@ -16,7 +16,7 @@ rects = calculate_polies(bottom_left_lat, bottom_left_long, top_right_lat, top_r
 @bp_cars.route('/', methods=['GET'])
 def get_cars():
   
-  if(not current_app.config.get('HERE_API_KEY')):
+  if(not current_app.config.get("HERE_API_KEY")):
     return jsonify({'error': 'Authentication error', 'messege': 'No API key provided', 'code': '404'}), 404
   base_url = current_app.config.get('HERE_API_FLOW_URL')
   
