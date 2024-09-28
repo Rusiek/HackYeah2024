@@ -29,17 +29,11 @@ export const getAccidents = () => {
     });
 };
 
-/*
-  [
-    {
-      ID: string,
-      comune: string,
-      district: string,
-      lat: string,
-      long: string,
-      location: string,
-      voivodeship: string,
-      weight: string (C/L/S - Ciezki Lekki Smiertelny)
-    }, itd..
-  ]
-*/
+export const getWeather = (lat, long) => {
+  return axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=temperature_2m,weather_code&forecast_days=1`)
+    .then(response => response.data)
+    .catch(error => {
+      console.error('Error fetching paths:', error);
+      throw error;
+    });
+}
