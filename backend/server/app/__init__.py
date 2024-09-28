@@ -13,6 +13,7 @@ redis_client = FlaskRedis()
 from app.routes.routes import bp_routes
 from app.routes.accidents.accidents import bp_accidents
 from app.routes.paths.paths import bp_paths
+from app.routes.cars.cars import bp_cars
 
 def create_app(config=Config):
   app = Flask(__name__)
@@ -23,6 +24,7 @@ def create_app(config=Config):
   app.register_blueprint(bp_routes, url_prefix='/test')
   app.register_blueprint(bp_accidents, url_prefix='/accidents')
   app.register_blueprint(bp_paths, url_prefix='/paths')
+  app.register_blueprint(bp_cars, url_prefix='/cars')
 
   @app.route('/')
   def index():
