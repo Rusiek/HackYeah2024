@@ -4,6 +4,7 @@ import { FaCarCrash } from "react-icons/fa";
 import { PiRoadHorizon } from "react-icons/pi";
 import { PiRoadHorizonFill } from "react-icons/pi";
 import { MainContext } from '../context/MainContext';
+import { IoLocationSharp } from "react-icons/io5";
 
 const Overlay = () => {
   const { settings: {
@@ -22,7 +23,7 @@ const Overlay = () => {
     <div className="overlay">
 
       <div className="group">
-        <span className="label">Punkt początkowy</span>
+        <span className="label labelStart"><IoLocationSharp /> Punkt początkowy</span>
         <div className="field" onClick={() => {
           setCoordinatePickingState(1)
         }}>
@@ -34,7 +35,7 @@ const Overlay = () => {
         </div>
       </div>
       <div className="group">
-        <span className="label">Punkt końcowy</span>
+        <span className="label labelEnd"><IoLocationSharp /> Punkt końcowy</span>
         <div className="field" onClick={() => {
           setCoordinatePickingState(2)
         }}>
