@@ -2,27 +2,30 @@ import { useContext, useRef, useState, useEffect } from 'react'
 import './styles/index.scss'
 
 import DeckGL from '@deck.gl/react';
-import Map from 'react-map-gl';
+import InteractiveMap from 'react-map-gl';
 import { OBJLoader } from '@loaders.gl/obj';
 import { registerLoaders } from '@loaders.gl/core';
 import { INITIAL_VIEW_STATE } from './utils/MapUtils';
 import { MainContext } from './context/MainContext';
 import { TripsLayer } from '@deck.gl/geo-layers';
 import { animate } from 'popmotion';
+import Overlay from './components/Overlay';
 
 registerLoaders([OBJLoader]);
-
-const DATA_URL = {
-  TRIPS: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/trips/trips-v7.json'
-};
-
 
 const App = () => {
   const mapRef: any = useRef();
 
-  const { map: {
-    mapViewState, setMapViewState
-  }, data: { paths } } = useContext(MainContext);
+  const {
+    map: {
+      mapViewState, setMapViewState
+    },
+    data: {
+      paths
+    },
+    settings: {
+      coordinatePickingState, setCoordinatePickingState, setStartPosition, setEndPosition
+    } } = useContext(MainContext);
 
   const theme = {
     buildingColor: [74, 80, 87],
@@ -54,6 +57,7 @@ const App = () => {
 
   return (
     <div>
+      <Overlay />
       <DeckGL
         layers={layers}
         initialViewState={INITIAL_VIEW_STATE}
@@ -63,8 +67,20 @@ const App = () => {
         onViewStateChange={(newMapViewState) => {
           setMapViewState(newMapViewState.viewState)
         }}
+        onClick={(e) => {
+          const coord = e?.coordinate || null;
+
+          if (coordinatePickingState === 1) {
+            setCoordinatePickingState(0)
+            setStartPosition(coord)
+          }
+          if (coordinatePickingState === 2) {
+            setCoordinatePickingState(0)
+            setEndPosition(coord)
+          }
+        }}
       >
-        <Map
+        <InteractiveMap
           reuseMaps={true}
           ref={mapRef}
           onLoad={() => {
@@ -75,7 +91,7 @@ const App = () => {
           mapStyle={"mapbox://styles/mapbox/dark-v11"}
           mapboxAccessToken={import.meta.env.VITE_MAP_KEY}
         >
-        </Map>
+        </InteractiveMap>
       </DeckGL>
     </div>
   )

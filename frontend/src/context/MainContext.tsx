@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useEffect, useState } from "react"
 import { MapViewState } from 'deck.gl';
 import { INITIAL_VIEW_STATE } from "../utils/MapUtils";
-import { getPaths } from "../services/PathsService";
+import { getPath, getPaths } from "../services/PathsService";
 
 type MapType = {
   mapViewState: MapViewState;
@@ -12,9 +12,21 @@ type DataType = {
   paths: any;
 }
 
+type SettingsType = {
+  selectedOption: number;
+  setSelectedOption: any;
+  coordinatePickingState: number;
+  setCoordinatePickingState: any;
+  startPosition: number[] | null;
+  endPosition: number[] | null;
+  setStartPosition: any;
+  setEndPosition: any;
+}
+
 type MainContextType = {
   map: MapType;
   data: DataType;
+  settings: SettingsType;
 }
 
 export const MainContext = createContext<MainContextType>({
@@ -24,6 +36,16 @@ export const MainContext = createContext<MainContextType>({
   },
   data: {
     paths: []
+  },
+  settings: {
+    selectedOption: 0,
+    setSelectedOption: () => { },
+    coordinatePickingState: 0,
+    setCoordinatePickingState: () => { },
+    startPosition: null,
+    endPosition: null,
+    setStartPosition: () => { },
+    setEndPosition: () => { }
   }
 })
 
@@ -32,14 +54,25 @@ export const MainContextProvider = ({ children }: {
 }) => {
   const [mapViewState, setMapViewState] = useState<MapViewState>(INITIAL_VIEW_STATE)
   const [paths, setPaths] = useState([])
+  const [selectedOption, setSelectedOption] = useState(0)
+  const [coordinatePickingState, setCoordinatePickingState] = useState(0)
+  const [startPosition, setStartPosition] = useState<number[] | null>(null);
+  const [endPosition, setEndPosition] = useState<number[] | null>(null);
 
   useEffect(() => {
-    getPaths()
+    // getPaths()
+    //   .then((data) => {
+    //     setPaths(data.paths.map((path, index) => ({
+    //       vendor: index,
+    //       path: path
+    //     })))
+    //   })
+    getPath()
       .then((data) => {
-        setPaths(data.paths.map((path, index) => ({
-          vendor: index,
-          path: path
-        })))
+        setPaths([{
+          vendor: 1,
+          path: data.path
+        }])
       })
   }, [])
 
@@ -50,6 +83,16 @@ export const MainContextProvider = ({ children }: {
     },
     data: {
       paths
+    },
+    settings: {
+      selectedOption,
+      setSelectedOption,
+      coordinatePickingState,
+      setCoordinatePickingState,
+      startPosition,
+      endPosition,
+      setStartPosition,
+      setEndPosition
     }
   }}>
     {children}

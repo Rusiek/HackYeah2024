@@ -10,3 +10,12 @@ export const getPaths = () => {
       throw error;
     });
 };
+
+export const getPath = () => {
+  return axios.get(`${API_BASE_URL}/paths/1`)
+    .then(response => response.data)
+    .catch(error => {
+      console.error('Error fetching paths:', error);
+      throw error;
+    });
+};
