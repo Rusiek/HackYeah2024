@@ -2,23 +2,23 @@ import React, { useContext } from 'react';
 import { MainContext } from '../context/MainContext';
 import { TripsLayer } from '@deck.gl/geo-layers';
 
-const useTripsLayer = () => {
-  const { settings: { selectedOption }, data: { paths } } = useContext(MainContext)
-
-  if (!selectedOption?.[0]) return null
+const usePathfindingLayer = () => {
+  const { settings: { startPosition, endPosition }, data: { singlePath } } = useContext(MainContext)
 
   const theme = {
-    trailColor: [230, 210, 0]
+    trailColor: [255, 255, 255]
   };
 
+  if (!startPosition || !endPosition) return null
+
   return new TripsLayer<Trip>({
-    id: 'trips',
-    data: paths,
+    id: 'pathfinding',
+    data: [singlePath],
     getPath: d => d.path,
     getTimestamps: d => d.timestamps,
     getColor: d => theme.trailColor,
-    opacity: 0.3,
-    widthMinPixels: 2,
+    opacity: 1,
+    widthMinPixels: 3,
     rounded: true,
     fadeTrail: false,
     currentTime: Infinity,
@@ -26,4 +26,4 @@ const useTripsLayer = () => {
   })
 };
 
-export default useTripsLayer;
+export default usePathfindingLayer;
