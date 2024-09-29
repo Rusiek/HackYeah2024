@@ -1,13 +1,13 @@
 import pickle
-import threading
 import time
 
 import networkx as nx
 from flask import Flask, request, jsonify
 from sklearn.neighbors import KDTree
 from flask_cors import CORS
+import os
 
-from backend.route_risk.graph import update
+from graph import update
 
 app = Flask(__name__)
 
@@ -15,16 +15,16 @@ CORS(app)
 
 G = []
 
-with open('nx_graph_00.pkl', 'rb') as f:
+with open(os.path.join(os.path.dirname(__file__), 'nx_graph_00.pkl'), 'rb') as f:
     G.append(pickle.load(f))
 
-with open('nx_graph_01.pkl', 'rb') as f:
+with open(os.path.join(os.path.dirname(__file__), 'nx_graph_01.pkl'), 'rb') as f:
     G.append(pickle.load(f))
 
-with open('nx_graph_10.pkl', 'rb') as f:
+with open(os.path.join(os.path.dirname(__file__), 'nx_graph_10.pkl'), 'rb') as f:
     G.append(pickle.load(f))
 
-with open('nx_graph_11.pkl', 'rb') as f:
+with open(os.path.join(os.path.dirname(__file__), 'nx_graph_11.pkl'), 'rb') as f:
     G.append(pickle.load(f))
 
 nodes = list(G[0].nodes())
@@ -71,11 +71,6 @@ def actualize_traffic():
         update()
         time.sleep(5000)
 
-def start_background_task():
-    task_thread = threading.Thread(target=actualize_traffic())
-    task_thread.daemon = True
-    task_thread.start()
-
 if __name__ == '__main__':
-    start_background_task()
     app.run('127.0.0.1', 5005, debug=True)
+    actualize_traffic()
