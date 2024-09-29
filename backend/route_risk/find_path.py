@@ -42,7 +42,7 @@ def get_data():
     end = tuple(kdTree.data[dst_idx])
     
     mask = avoid * 2 + velo
-    path = nx.shortest_path(G[mask], source=start, target=end, weight='weight')
+    path = nx.astar_path(G[mask], source=start, target=end, weight='weight')
     for i in range(len(path) - 1):
         response_dict = {}
         response_dict['path'] = [list(path[i]), list(path[i + 1])]

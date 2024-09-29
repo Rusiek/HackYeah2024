@@ -16,6 +16,10 @@ verticies = []
 results = data_here.get('results')
 idx = 1
 for e in tqdm(results):
+    current_flow = e.get('currentFlow')
+    speed_limit = e.get('speed')
+    if speed_limit > 27.78:
+        continue
     loc = e.get('location')
     shape = loc.get('shape')
     links = shape.get('links')
