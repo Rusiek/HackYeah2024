@@ -42,7 +42,7 @@ def get_data():
     end = tuple(kdTree.data[dst_idx])
     
     mask = avoid * 2 + velo
-    path = nx.shortest_path(G[mask], source=start, target=end, weight='weight')
+    path = nx.astar_path(G[mask], source=start, target=end, weight='weight')
     for i in range(len(path) - 1):
         response_dict = {}
         response_dict['path'] = [list(path[i]), list(path[i + 1])]
@@ -50,6 +50,16 @@ def get_data():
         path[i] = response_dict
 
     return jsonify(path)
+
+@app.route('/get_edges', methods=['GET'])
+def get_edges():
+    edges = []
+    for e in G[0].edges(data = True):
+        response_dict = {}
+        response_dict['path'] = [list(e[0]), list(e[1])]
+        response_dict['risk'] = e[2]['risk']
+        edges.append(response_dict)
+    return jsonify(edges)
 
 if __name__ == '__main__':
     app.run('127.0.0.1', 5005, debug=True)

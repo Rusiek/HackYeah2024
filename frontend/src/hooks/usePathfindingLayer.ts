@@ -29,7 +29,7 @@ const usePathfindingLayer = () => {
     data: singlePath,
     getPath: d => d.path,
     getTimestamps: d => d.timestamps,
-    getColor: d => d.vendor == 'lo' ? [0, 255, 0] : d.vendor == 'mid' ? [255, 255, 0] : [255, 0, 0],
+    getColor: d => d.vendor == 'lo' ? [0, 255, 0] : d.vendor == 'mid' ? [255, 128, 0] : [255, 0, 0],
     opacity: 1,
     widthMinPixels: 3,
     rounded: true,
