@@ -63,10 +63,10 @@ export const getShortestPath = (start, end, avoidUnsafe, preferVelo) => {
     });
 }
 
-export const getGpx = (route_points, get_waypoints) => {
+export const getGpx = (vertices, should_get_waypoints) => {
   return axios.post(`${ROUTES_BASE_API_URL}/gpx`, {
-    route_points: route_points,
-    get_waypoints: get_waypoints
+    vertices: vertices,
+    should_get_waypoints: should_get_waypoints
   })
     .then(response => response.data)
     .catch(error => {
