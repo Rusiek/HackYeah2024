@@ -1,5 +1,4 @@
 import numpy as np
-import networkit as nk
 import networkx as nx
 from datetime import datetime
 from route_risk import RouteRisk
@@ -8,6 +7,7 @@ from sklearn.neighbors import KDTree
 from tqdm import tqdm
 import json
 import pickle
+import ast
 
 with open('backend/server/app/routes/cars/data/traffic_data.json') as f:
     data_here = json.load(f)
@@ -70,6 +70,8 @@ for e in tqdm(results):
         for i in range(1, len(points)):
             src = (points[i-1]['lng'], points[i-1]['lat'])
             dst = (points[i]['lng'], points[i]['lat'])
+            if len(src) != 2 or len(dst) != 2:
+                continue
             d = calculate_distance(src[0], src[1], dst[0], dst[1])
             G.add_edge(src, dst, weight=d)
             if 'jamFactor' in current_flow:
@@ -78,6 +80,13 @@ for e in tqdm(results):
                 G[src][dst]['SU'] = current_flow['speedUncapped']
             if 'speed' in current_flow:
                 G[src][dst]['SC'] = current_flow['speed']
+            G.add_edge(dst, src, weight=d)
+            if 'jamFactor' in current_flow:
+                G[dst][src]['JF'] = current_flow['jamFactor']
+            if 'speedUncapped' in current_flow:
+                G[dst][src]['SU'] = current_flow['speedUncapped']
+            if 'speed' in current_flow:
+                G[dst][src]['SC'] = current_flow['speed']
 
 
 eps = 4e-5
@@ -95,9 +104,12 @@ for key, item in tqdm(data_strava.items()):
             dst_idx = dst1[0][0]  # Get the index for the nearest point to dst
             
             # Now use those indices to get the coordinates from the original KDTree data
-            src = tuple(KDTree.data[src_idx])
-            dst = tuple(KDTree.data[dst_idx])
-            
+            if dist1 < eps:
+                src = tuple(KDTree.data[src_idx])
+            if dist2 < eps:
+                dst = tuple(KDTree.data[dst_idx])
+            if len(src) != 2 or len(dst) != 2:
+                continue
             if not dst in G[src]:
                 dist = calculate_distance(src[0], src[1], dst[0], dst[1])
                 G.add_edge(src, dst, weight=dist)
@@ -107,6 +119,55 @@ for key, item in tqdm(data_strava.items()):
                 G[src][dst]['effort_count'] = item['effort_count']
             if 'hazardous' in item:
                 G[src][dst]['hazardous'] = item['hazardous']
+
+            if not src in G[dst]:
+                dist = calculate_distance(src[0], src[1], dst[0], dst[1])
+                G.add_edge(src, dst, weight=dist)
+            if 'effort_count' in G[dst][src]:
+                G[dst][src]['effort_count'] += item.get('effort_count', 0)
+            elif 'effort_count' in item:
+                G[dst][src]['effort_count'] = item['effort_count']
+            if 'hazardous' in item:
+                G[dst][src]['hazardous'] = item['hazardous']
+
+with open('velo/velo.txt', 'r') as f3:
+    data_velo = f3.read()
+
+data_velo = ast.literal_eval(data_velo)
+for path in data_velo:
+    for i in range(1, len(path)):
+        src = (path[i-1][0], path[i-1][1])
+        dst = (path[i][0], path[i][1])
+        dist1, src1 = KDTree.query([list(src)], k=1)
+        dist2, dst1 = KDTree.query([list(dst)], k=1)
+        src_idx = src1[0][0]
+        dst_idx = dst1[0][0]
+        
+        if dist1 < eps:
+            src = tuple(KDTree.data[src_idx])
+        if dist2 < eps:
+            dst = tuple(KDTree.data[dst_idx])
+        
+        if(len(src) != 2 or len(dst) != 2):
+            continue
+
+        if not src in G:
+            dist = calculate_distance(src[0], src[1], dst[0], dst[1])
+            G.add_edge(src, dst, weight=dist)
+
+        if not dst in G[src]:
+            dist = calculate_distance(src[0], src[1], dst[0], dst[1])
+            G.add_edge(src, dst, weight=dist)
+        G[src][dst]['velo'] = True
+        
+        if not dst in G:
+            dist = calculate_distance(src[0], src[1], dst[0], dst[1])
+            G.add_edge(dst, src, weight=dist)
+
+        if not src in G[dst]:
+            dist = calculate_distance(src[0], src[1], dst[0], dst[1])
+            G.add_edge(dst, src, weight=dist)
+        G[dst][src]['velo'] = True
 
 
 strava_hazardous_list = []
@@ -164,43 +225,43 @@ for idx, edge in tqdm(enumerate(G.edges(data=True))):
     if idx == 1000:
         break
 
-def nx_to_nk_with_attributes(nx_graph: nx.Graph) -> nk.Graph:
-    nk_graph_00 = nk.Graph(nx_graph.number_of_nodes(), weighted=True)
-    nk_graph_01 = nk.Graph(nx_graph.number_of_nodes(), weighted=True)
-    nk_graph_10 = nk.Graph(nx_graph.number_of_nodes(), weighted=True)
-    nk_graph_11 = nk.Graph(nx_graph.number_of_nodes(), weighted=True)
-
-    node_mapping = {node: idx for idx, node in enumerate(nx_graph.nodes())}
+def add_risk_coef(nx_graph: nx.Graph) -> tuple[nx.Graph, nx.Graph, nx.Graph, nx.Graph]:
+    nx_graph_00 = nx.Graph()
+    nx_graph_01 = nx.Graph()
+    nx_graph_10 = nx.Graph()
+    nx_graph_11 = nx.Graph()
 
     for u, v, data in tqdm(nx_graph.edges(data=True)):
-        nk_u = node_mapping[u]
-        nk_v = node_mapping[v]
         weight_00 = data.get('weight', 1.0)
         weight_01 = weight_00 * (2 if data.get('risk', 'mid') == 'hi' else 1)
         weight_01 = weight_01 * (0.5 if data.get('risk', 'mid') == 'lo' else 1)
         weight_10 = weight_00 * (0.3 if data.get('velo', False) else 1)
         weight_11 = weight_01 * weight_10 / weight_00
 
-        nk_graph_00.addEdge(nk_u, nk_v, weight_00)
-        nk_graph_01.addEdge(nk_u, nk_v, weight_01)
-        nk_graph_10.addEdge(nk_u, nk_v, weight_10)
-        nk_graph_11.addEdge(nk_u, nk_v, weight_11)
+        nx_graph_00.add_edge(u, v, weight=weight_00, risk=data.get('risk', 'lo'))
 
-    return nk_graph_00, nk_graph_01, nk_graph_10, nk_graph_11
+        if data.get('risk', 'lo') != 'hi':
+            nx_graph_01.add_edge(u, v, weight=weight_01, risk=data.get('risk', 'lo'))
+        
+        nx_graph_10.add_edge(u, v, weight=weight_10, risk=data.get('risk', 'lo'))
 
-nk_graph_00, nk_graph_01, nk_graph_10, nk_graph_11 = nx_to_nk_with_attributes(G)
+        if data.get('risk', 'lo') != 'hi':
+            nx_graph_11.add_edge(u, v, weight=weight_11, risk=data.get('risk', 'lo'))
 
-with open('backend/route_risk/nk_graph_00.pkl', 'wb') as f:
-    pickle.dump(nk_graph_00, f)
+    return nx_graph_00, nx_graph_01, nx_graph_10, nx_graph_11
 
-with open('backend/route_risk/nk_graph_01.pkl', 'wb') as f:
-    pickle.dump(nk_graph_01, f)
+nx_graph_00, nx_graph_01, nx_graph_10, nx_graph_11 = add_risk_coef(G)
 
-with open('backend/route_risk/nk_graph_10.pkl', 'wb') as f:
-    pickle.dump(nk_graph_10, f)
+with open('backend/route_risk/nx_graph_00.pkl', 'wb') as f:
+    pickle.dump(nx_graph_00, f)
 
-with open('backend/route_risk/nk_graph_11.pkl', 'wb') as f:
-    pickle.dump(nk_graph_11, f)
+with open('backend/route_risk/nx_graph_01.pkl', 'wb') as f:
+    pickle.dump(nx_graph_01, f)
 
+with open('backend/route_risk/nx_graph_10.pkl', 'wb') as f:
+    pickle.dump(nx_graph_10, f)
 
-# print(G.edges(data=True))
+with open('backend/route_risk/nx_graph_11.pkl', 'wb') as f:
+    pickle.dump(nx_graph_11, f)
+
+print(nx_graph_00.edges(data=True))

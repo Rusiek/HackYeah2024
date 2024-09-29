@@ -13,6 +13,7 @@ import useAccidentsLayer from './hooks/useAccidentsLayer';
 import useMarkersLayer from './hooks/useMarkersLayer';
 import Gpx from './components/Gpx';
 import Searchbar from './components/SearchBar';
+import usePathfindingLayer from './hooks/usePathfindingLayer';
 
 registerLoaders([OBJLoader]);
 
@@ -31,11 +32,13 @@ const App = () => {
   const tripsLayer = useTripsLayer()
   const accidentsLayer = useAccidentsLayer()
   const markersLayer = useMarkersLayer()
+  const pathfindingLayer = usePathfindingLayer()
 
   const layers = [
     tripsLayer,
     accidentsLayer,
-    markersLayer
+    markersLayer,
+    pathfindingLayer
   ];
 
   return (

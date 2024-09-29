@@ -75,7 +75,7 @@ const Overlay = () => {
             <FaRoad />
             <span>Unikaj niebezpiecznych tras</span>
           </button>
-          <button onClick={() => changeOption(0)} className={`${selectedOption?.[4] == 1 && "active"}`}>
+          <button onClick={() => changeOption(4)} className={`${selectedOption?.[4] == 1 && "active"}`}>
             <FaMapLocation />
             <span>Wyświetl ścieżki <b>VELO</b></span>
           </button>

@@ -10,6 +10,7 @@ type MapType = {
 
 type DataType = {
   paths: any;
+  singlePath: any;
   accidents: any;
 }
 
@@ -37,6 +38,7 @@ export const MainContext = createContext<MainContextType>({
   },
   data: {
     paths: [],
+    singlePath: [],
     accidents: []
   },
   settings: {
@@ -56,6 +58,7 @@ export const MainContextProvider = ({ children }: {
 }) => {
   const [mapViewState, setMapViewState] = useState<MapViewState>(INITIAL_VIEW_STATE)
   const [paths, setPaths] = useState([])
+  const [singlePath, setSinglePath] = useState([])
   const [accidents, setAccidents] = useState([])
   const [selectedOption, setSelectedOption] = useState([1, 0, 0, 0, 0])
   const [coordinatePickingState, setCoordinatePickingState] = useState(0)
@@ -70,13 +73,15 @@ export const MainContextProvider = ({ children }: {
           path: path
         })))
       })
-    // getPath()
-    //   .then((data) => {
-    //     setPaths([{
-    //       vendor: 1,
-    //       path: data.path
-    //     }])
-    //   })
+
+    getPath()
+      .then((data) => {
+        setSinglePath({
+          vendor: 1,
+          path: data.path
+        })
+      })
+
     getAccidents()
       .then((data) => {
         setAccidents(data)
@@ -90,7 +95,8 @@ export const MainContextProvider = ({ children }: {
     },
     data: {
       paths,
-      accidents
+      accidents,
+      singlePath
     },
     settings: {
       selectedOption,

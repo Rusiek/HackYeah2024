@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import { MainContext } from '../context/MainContext';
 import { TripsLayer } from '@deck.gl/geo-layers';
-import { animate } from 'popmotion';
 
 const useTripsLayer = () => {
   const { settings: { selectedOption }, data: { paths } } = useContext(MainContext)
