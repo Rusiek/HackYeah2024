@@ -14,6 +14,7 @@ import useMarkersLayer from './hooks/useMarkersLayer';
 import Gpx from './components/Gpx';
 import Searchbar from './components/SearchBar';
 import usePathfindingLayer from './hooks/usePathfindingLayer';
+import FailedLoadTooltip from './components/FailedLoadTooltip,';
 
 registerLoaders([OBJLoader]);
 
@@ -44,6 +45,7 @@ const App = () => {
   return (
     <div>
       <Overlay />
+      <FailedLoadTooltip/>
       <Gpx />
       <Searchbar />
       <DeckGL

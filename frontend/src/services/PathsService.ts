@@ -59,7 +59,6 @@ export const getShortestPath = (start, end, avoidUnsafe, preferVelo) => {
     .then(response => response.data)
     .catch(error => {
       console.error('Error fetching paths:', error);
-      throw error;
     });
 }
 

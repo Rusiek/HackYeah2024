@@ -24,6 +24,8 @@ type SettingsType = {
   setStartPosition: any;
   setEndPosition: any;
   setSinglePath: any;
+  failedLoad: number;
+  setFailedLoad: any;
 }
 
 type MainContextType = {
@@ -52,6 +54,8 @@ export const MainContext = createContext<MainContextType>({
     setStartPosition: () => { },
     setEndPosition: () => { },
     setSinglePath: () => { },
+    failedLoad: 0,
+    setFailedLoad: () => { }
   }
 })
 
@@ -66,6 +70,7 @@ export const MainContextProvider = ({ children }: {
   const [coordinatePickingState, setCoordinatePickingState] = useState(0)
   const [startPosition, setStartPosition] = useState<number[] | null>(null);
   const [endPosition, setEndPosition] = useState<number[] | null>(null);
+  const [failedLoad, setFailedLoad] = useState<number>(-1);
 
   useEffect(() => {
     getPaths()
@@ -110,6 +115,8 @@ export const MainContextProvider = ({ children }: {
       setStartPosition,
       setEndPosition,
       setSinglePath,
+      failedLoad,
+      setFailedLoad
     }
   }}>
     {children}

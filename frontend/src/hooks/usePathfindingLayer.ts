@@ -4,11 +4,20 @@ import { TripsLayer } from '@deck.gl/geo-layers';
 import { getShortestPath } from '../services/PathsService';
 
 const usePathfindingLayer = () => {
-  const { settings: { startPosition, endPosition, selectedOption, setSinglePath }, data: { singlePath } } = useContext(MainContext)
+  const { settings: { startPosition, endPosition, selectedOption, setSinglePath, setFailedLoad, failedLoad }, data: { singlePath } } = useContext(MainContext)
+
 
   const theme = {
     trailColor: [255, 255, 255]
   };
+
+  const _setFailedLoad = () => {
+    if(failedLoad > 0) clearTimeout(failedLoad)
+    const timeoutId = setTimeout(() => {
+      setFailedLoad(-1)
+    }, 3000)
+    setFailedLoad(timeoutId)
+  }
 
   useEffect(() => {
     if (startPosition != null && endPosition != null) {
@@ -18,6 +27,10 @@ const usePathfindingLayer = () => {
           vendor: path.risk,
           path: path.path,
         })))
+      })
+      .catch((reason) => {
+        console.log('Could not determine path')
+        _setFailedLoad()
       })
     }
   }, [startPosition, endPosition, selectedOption])
