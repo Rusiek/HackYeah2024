@@ -28,8 +28,6 @@ const Gpx = () => {
         console.error('Error downloading the GPX file:', error);
       });
   }
-
-  console.log(singlePath)
   return (
     <div className={`export ${singlePath && singlePath.length > 0 ? '' : 'disabled'}`} onClick={handleClick}>
       <BiExport />
