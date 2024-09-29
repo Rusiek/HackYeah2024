@@ -8,6 +8,7 @@ from sklearn.neighbors import KDTree
 from tqdm import tqdm
 import json
 import pickle
+import ast
 
 with open('backend/server/app/routes/cars/data/traffic_data.json') as f:
     data_here = json.load(f)
@@ -70,6 +71,8 @@ for e in tqdm(results):
         for i in range(1, len(points)):
             src = (points[i-1]['lng'], points[i-1]['lat'])
             dst = (points[i]['lng'], points[i]['lat'])
+            if len(src) != 2 or len(dst) != 2:
+                continue
             d = calculate_distance(src[0], src[1], dst[0], dst[1])
             G.add_edge(src, dst, weight=d)
             if 'jamFactor' in current_flow:
@@ -78,6 +81,13 @@ for e in tqdm(results):
                 G[src][dst]['SU'] = current_flow['speedUncapped']
             if 'speed' in current_flow:
                 G[src][dst]['SC'] = current_flow['speed']
+            G.add_edge(dst, src, weight=d)
+            if 'jamFactor' in current_flow:
+                G[dst][src]['JF'] = current_flow['jamFactor']
+            if 'speedUncapped' in current_flow:
+                G[dst][src]['SU'] = current_flow['speedUncapped']
+            if 'speed' in current_flow:
+                G[dst][src]['SC'] = current_flow['speed']
 
 
 eps = 4e-5
@@ -95,9 +105,12 @@ for key, item in tqdm(data_strava.items()):
             dst_idx = dst1[0][0]  # Get the index for the nearest point to dst
             
             # Now use those indices to get the coordinates from the original KDTree data
-            src = tuple(KDTree.data[src_idx])
-            dst = tuple(KDTree.data[dst_idx])
-            
+            if dist1 < eps:
+                src = tuple(KDTree.data[src_idx])
+            if dist2 < eps:
+                dst = tuple(KDTree.data[dst_idx])
+            if len(src) != 2 or len(dst) != 2:
+                continue
             if not dst in G[src]:
                 dist = calculate_distance(src[0], src[1], dst[0], dst[1])
                 G.add_edge(src, dst, weight=dist)
@@ -107,6 +120,55 @@ for key, item in tqdm(data_strava.items()):
                 G[src][dst]['effort_count'] = item['effort_count']
             if 'hazardous' in item:
                 G[src][dst]['hazardous'] = item['hazardous']
+
+            if not src in G[dst]:
+                dist = calculate_distance(src[0], src[1], dst[0], dst[1])
+                G.add_edge(src, dst, weight=dist)
+            if 'effort_count' in G[dst][src]:
+                G[dst][src]['effort_count'] += item.get('effort_count', 0)
+            elif 'effort_count' in item:
+                G[dst][src]['effort_count'] = item['effort_count']
+            if 'hazardous' in item:
+                G[dst][src]['hazardous'] = item['hazardous']
+
+with open('velo/velo.txt', 'r') as f3:
+    data_velo = f3.read()
+
+data_velo = ast.literal_eval(data_velo)
+for path in data_velo:
+    for i in range(1, len(path)):
+        src = (path[i-1][0], path[i-1][1])
+        dst = (path[i][0], path[i][1])
+        dist1, src1 = KDTree.query([list(src)], k=1)
+        dist2, dst1 = KDTree.query([list(dst)], k=1)
+        src_idx = src1[0][0]
+        dst_idx = dst1[0][0]
+        
+        if dist1 < eps:
+            src = tuple(KDTree.data[src_idx])
+        if dist2 < eps:
+            dst = tuple(KDTree.data[dst_idx])
+        
+        if(len(src) != 2 or len(dst) != 2):
+            continue
+
+        if not src in G:
+            dist = calculate_distance(src[0], src[1], dst[0], dst[1])
+            G.add_edge(src, dst, weight=dist)
+
+        if not dst in G[src]:
+            dist = calculate_distance(src[0], src[1], dst[0], dst[1])
+            G.add_edge(src, dst, weight=dist)
+        G[src][dst]['velo'] = True
+        
+        if not dst in G:
+            dist = calculate_distance(src[0], src[1], dst[0], dst[1])
+            G.add_edge(dst, src, weight=dist)
+
+        if not src in G[dst]:
+            dist = calculate_distance(src[0], src[1], dst[0], dst[1])
+            G.add_edge(dst, src, weight=dist)
+        G[dst][src]['velo'] = True
 
 
 strava_hazardous_list = []
@@ -203,4 +265,4 @@ with open('backend/route_risk/nk_graph_11.pkl', 'wb') as f:
     pickle.dump(nk_graph_11, f)
 
 
-# print(G.edges(data=True))
+print(G.edges(data=True))
