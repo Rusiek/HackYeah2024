@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { MainContext } from '../context/MainContext';
 import { getWeather } from '../services/PathsService';
+import { PiWind } from "react-icons/pi";
 
 const Weather = () => {
   const { settings: {
@@ -31,7 +32,8 @@ const Weather = () => {
             {temp}&deg; C
           </div>
           <div className="description">
-            Słonecznie
+            Słonecznie<br />
+            <div className="pm10"><PiWind /> PM10: <b>43,3 μm</b></div>
           </div>
         </div>
       </div>

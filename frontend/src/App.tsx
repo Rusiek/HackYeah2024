@@ -11,6 +11,7 @@ import Overlay from './components/Overlay';
 import useTripsLayer from './hooks/useTripsLayer';
 import useAccidentsLayer from './hooks/useAccidentsLayer';
 import useMarkersLayer from './hooks/useMarkersLayer';
+import Gpx from './components/Gpx';
 
 registerLoaders([OBJLoader]);
 
@@ -38,6 +39,7 @@ const App = () => {
   return (
     <div>
       <Overlay />
+      <Gpx />
       <DeckGL
         layers={layers}
         initialViewState={INITIAL_VIEW_STATE}

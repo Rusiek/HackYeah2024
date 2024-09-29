@@ -7,6 +7,7 @@ import { MainContext } from '../context/MainContext';
 import { IoLocationSharp } from "react-icons/io5";
 import Weather from './Weather';
 import { IoClose } from "react-icons/io5";
+import { FaMapLocation } from "react-icons/fa6";
 
 const Overlay = () => {
   const { settings: {
@@ -60,7 +61,9 @@ const Overlay = () => {
           </div>
         </div>
         <div className="buttons">
-          <button onClick={() => changeOption(0)} className={`${selectedOption?.[0] == 1 && "active"}`}>
+          <button onClick={() => changeOption(0)} className={`${selectedOption?.[0] == 1 && "active"}`} style={{
+            width: 'calc(100% - 20px)'
+          }}>
             <AiOutlineSafety />
             <span>Bezpieczeństwo tras</span>
           </button>
@@ -68,13 +71,17 @@ const Overlay = () => {
             <FaCarCrash />
             <span>Wypadki z udziałem rowerów</span>
           </button>
-          <button onClick={() => changeOption(2)} className={`${selectedOption?.[2] == 1 && "active"}`}>
-            <MdDirectionsBike />
-            <span>Preferuj ścieżki <b>VELO</b></span>
-          </button>
           <button onClick={() => changeOption(3)} className={`${selectedOption?.[3] == 1 && "active"}`}>
             <FaRoad />
             <span>Unikaj niebezpiecznych tras</span>
+          </button>
+          <button onClick={() => changeOption(0)} className={`${selectedOption?.[4] == 1 && "active"}`}>
+            <FaMapLocation />
+            <span>Wyświetl ścieżki <b>VELO</b></span>
+          </button>
+          <button onClick={() => changeOption(2)} className={`${selectedOption?.[2] == 1 && "active"}`}>
+            <MdDirectionsBike />
+            <span>Preferuj ścieżki <b>VELO</b></span>
           </button>
         </div>
       </div>

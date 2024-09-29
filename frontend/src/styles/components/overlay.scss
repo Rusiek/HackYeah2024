@@ -100,7 +100,6 @@
 
   & button {
     width: calc(50% - 20px);
-    height: calc(50% - 20px);
     margin: 10px;
 
     background: linear-gradient(135deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.25));
@@ -199,5 +198,51 @@
   &:hover {
     cursor: pointer;
     color: white;
+  }
+}
+
+.pm10 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.export {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  width: 180px;
+  height: 60px;
+  z-index: 50;
+
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.25));
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+
+  &:hover {
+    transform: translateY(-4px);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.15));
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 1), inset 0 0 12px rgba(0, 0, 0, 0.8);
+    cursor: pointer;
+  }
+
+  & span {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  & .label {
+    font-size: 12px;
   }
 }
