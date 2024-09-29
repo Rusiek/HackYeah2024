@@ -9,13 +9,13 @@ bp_gpx = Blueprint('gpx', __name__)
 @bp_gpx.route('/', methods=['POST'])
 def generate_gpx():
   data = request.json
-  route_points = data.get('route_points', [])
-  get_waypoints = data.get('get_waypoints', [])
+  vertices = data.get('vertices', [])
+  should_get_waypoints = data.get('should_get_waypoints', False)
 
 
   gpx = gpxpy.gpx.GPX()
 
-  if get_waypoints:
+  if should_get_waypoints:
     path_to_dangerous_points = os.path.join(os.path.dirname(__file__), '../accidents/data/accidents.csv')
     list_of_places = pd.read_csv(path_to_dangerous_points)
     list_of_places = list_of_places[['long', 'lat', 'weight']]
@@ -33,7 +33,7 @@ def generate_gpx():
   gpx_route = gpxpy.gpx.GPXRoute()
   gpx.routes.append(gpx_route)
 
-  for lat, lon in route_points:
+  for lat, lon in vertices:
       route_point = gpxpy.gpx.GPXRoutePoint(lat, lon)
       gpx_route.points.append(route_point)
 
