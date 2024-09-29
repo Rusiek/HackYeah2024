@@ -23,6 +23,7 @@ type SettingsType = {
   endPosition: number[] | null;
   setStartPosition: any;
   setEndPosition: any;
+  setSinglePath: any;
 }
 
 type MainContextType = {
@@ -49,7 +50,8 @@ export const MainContext = createContext<MainContextType>({
     startPosition: null,
     endPosition: null,
     setStartPosition: () => { },
-    setEndPosition: () => { }
+    setEndPosition: () => { },
+    setSinglePath: () => { },
   }
 })
 
@@ -74,13 +76,13 @@ export const MainContextProvider = ({ children }: {
         })))
       })
 
-    getPath()
-      .then((data) => {
-        setSinglePath({
-          vendor: 1,
-          path: data.path
-        })
-      })
+    // getPath()
+    //   .then((data) => {
+    //     setSinglePath({
+    //       vendor: 1,
+    //       path: data.path
+    //     })
+    //   })
 
     getAccidents()
       .then((data) => {
@@ -106,7 +108,8 @@ export const MainContextProvider = ({ children }: {
       startPosition,
       endPosition,
       setStartPosition,
-      setEndPosition
+      setEndPosition,
+      setSinglePath,
     }
   }}>
     {children}

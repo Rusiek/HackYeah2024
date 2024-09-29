@@ -1,8 +1,11 @@
 import pickle
 import networkx as nx
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 app = Flask(__name__)
+
+CORS(app)
 
 G = []
 
@@ -35,4 +38,4 @@ def get_data():
     return jsonify(path)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run('127.0.0.1', 5005, debug=True)

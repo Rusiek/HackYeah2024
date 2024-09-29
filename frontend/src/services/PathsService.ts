@@ -2,6 +2,8 @@ import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:5000';
 
+const ROUTES_BASE_API_URL = 'http://localhost:5005';
+
 export const getPaths = () => {
   return axios.get(`${API_BASE_URL}/paths/`)
     .then(response => response.data)
@@ -43,6 +45,20 @@ export const getLocation = (location: string) => {
     .then(response => response.data)
     .catch(error => {
       console.error('Error fetching location:', error);
+      throw error;
+    });
+}
+
+export const getShortestPath = (start, end, avoidUnsafe, preferVelo) => {
+  return axios.post(`${ROUTES_BASE_API_URL}/get_data`, {
+    start: start,
+    end: end,
+    avoidUnsafe: avoidUnsafe,
+    preferVelo: preferVelo
+  })
+    .then(response => response.data)
+    .catch(error => {
+      console.error('Error fetching paths:', error);
       throw error;
     });
 }
