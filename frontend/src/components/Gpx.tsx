@@ -11,9 +11,9 @@ const Gpx = () => {
   const { data: {
     singlePath
   } } = useContext(MainContext);
-
+  
   const handleClick = () => {
-    getGpx(singlePath.routePoints, singlePath.getPoints)
+    getGpx(singlePath)
       .then(responce => {
         const blob = new Blob([responce],{type:'application/gpx+xml'});
         const a = document.createElement('a');
