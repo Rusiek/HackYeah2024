@@ -1,5 +1,4 @@
 import numpy as np
-import networkit as nk
 import networkx as nx
 from datetime import datetime
 from route_risk import RouteRisk
@@ -226,43 +225,43 @@ for idx, edge in tqdm(enumerate(G.edges(data=True))):
     if idx == 1000:
         break
 
-def nx_to_nk_with_attributes(nx_graph: nx.Graph) -> nk.Graph:
-    nk_graph_00 = nk.Graph(nx_graph.number_of_nodes(), weighted=True)
-    nk_graph_01 = nk.Graph(nx_graph.number_of_nodes(), weighted=True)
-    nk_graph_10 = nk.Graph(nx_graph.number_of_nodes(), weighted=True)
-    nk_graph_11 = nk.Graph(nx_graph.number_of_nodes(), weighted=True)
-
-    node_mapping = {node: idx for idx, node in enumerate(nx_graph.nodes())}
+def add_risk_coef(nx_graph: nx.Graph) -> tuple[nx.Graph, nx.Graph, nx.Graph, nx.Graph]:
+    nx_graph_00 = nx.Graph()
+    nx_graph_01 = nx.Graph()
+    nx_graph_10 = nx.Graph()
+    nx_graph_11 = nx.Graph()
 
     for u, v, data in tqdm(nx_graph.edges(data=True)):
-        nk_u = node_mapping[u]
-        nk_v = node_mapping[v]
         weight_00 = data.get('weight', 1.0)
         weight_01 = weight_00 * (2 if data.get('risk', 'mid') == 'hi' else 1)
         weight_01 = weight_01 * (0.5 if data.get('risk', 'mid') == 'lo' else 1)
         weight_10 = weight_00 * (0.3 if data.get('velo', False) else 1)
         weight_11 = weight_01 * weight_10 / weight_00
 
-        nk_graph_00.addEdge(nk_u, nk_v, weight_00)
-        nk_graph_01.addEdge(nk_u, nk_v, weight_01)
-        nk_graph_10.addEdge(nk_u, nk_v, weight_10)
-        nk_graph_11.addEdge(nk_u, nk_v, weight_11)
+        nx_graph_00.add_edge(u, v, weight=weight_00, risk=data.get('risk', 'lo'))
 
-    return nk_graph_00, nk_graph_01, nk_graph_10, nk_graph_11
+        if data.get('risk', 'lo') != 'hi':
+            nx_graph_01.add_edge(u, v, weight=weight_01, risk=data.get('risk', 'lo'))
+        
+        nx_graph_10.add_edge(u, v, weight=weight_10, risk=data.get('risk', 'lo'))
 
-nk_graph_00, nk_graph_01, nk_graph_10, nk_graph_11 = nx_to_nk_with_attributes(G)
+        if data.get('risk', 'lo') != 'hi':
+            nx_graph_11.add_edge(u, v, weight=weight_11, risk=data.get('risk', 'lo'))
 
-with open('backend/route_risk/nk_graph_00.pkl', 'wb') as f:
-    pickle.dump(nk_graph_00, f)
+    return nx_graph_00, nx_graph_01, nx_graph_10, nx_graph_11
 
-with open('backend/route_risk/nk_graph_01.pkl', 'wb') as f:
-    pickle.dump(nk_graph_01, f)
+nx_graph_00, nx_graph_01, nx_graph_10, nx_graph_11 = add_risk_coef(G)
 
-with open('backend/route_risk/nk_graph_10.pkl', 'wb') as f:
-    pickle.dump(nk_graph_10, f)
+with open('backend/route_risk/nx_graph_00.pkl', 'wb') as f:
+    pickle.dump(nx_graph_00, f)
 
-with open('backend/route_risk/nk_graph_11.pkl', 'wb') as f:
-    pickle.dump(nk_graph_11, f)
+with open('backend/route_risk/nx_graph_01.pkl', 'wb') as f:
+    pickle.dump(nx_graph_01, f)
 
+with open('backend/route_risk/nx_graph_10.pkl', 'wb') as f:
+    pickle.dump(nx_graph_10, f)
 
-print(G.edges(data=True))
+with open('backend/route_risk/nx_graph_11.pkl', 'wb') as f:
+    pickle.dump(nx_graph_11, f)
+
+print(nx_graph_00.edges(data=True))
