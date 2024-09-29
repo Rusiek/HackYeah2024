@@ -16,7 +16,7 @@ const useTripsLayer = () => {
     data: paths,
     getPath: d => d.path,
     getTimestamps: d => d.timestamps,
-    getColor: d => theme.trailColor,
+    getColor: d => d.vendor == 'lo' ? [0, 255, 0] : d.vendor == 'mid' ? [255, 128, 0] : [255, 0, 0],
     opacity: 0.3,
     widthMinPixels: 2,
     rounded: true,

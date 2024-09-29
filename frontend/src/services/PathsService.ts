@@ -5,7 +5,7 @@ const API_BASE_URL = 'http://localhost:5000';
 const ROUTES_BASE_API_URL = 'http://localhost:5005';
 
 export const getPaths = () => {
-  return axios.get(`${API_BASE_URL}/paths/`)
+  return axios.get(`${ROUTES_BASE_API_URL}/get_edges`)
     .then(response => response.data)
     .catch(error => {
       console.error('Error fetching paths:', error);

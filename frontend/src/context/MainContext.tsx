@@ -70,9 +70,9 @@ export const MainContextProvider = ({ children }: {
   useEffect(() => {
     getPaths()
       .then((data) => {
-        setPaths(data.paths.map((path, index) => ({
-          vendor: index,
-          path: path
+        setPaths(data.map((path, index) => ({
+          vendor: path.risk,
+          path: path.path,
         })))
       })
 
