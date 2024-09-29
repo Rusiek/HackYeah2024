@@ -9,7 +9,9 @@ bp_gpx = Blueprint('gpx', __name__)
 @bp_gpx.route('/', methods=['POST'])
 def generate_gpx():
     data = request.json
+    
     edges = data.get('edges', [])
+    print(type(edges[0]))
     # should_get_waypoints = data.get('should_get_waypoints', False)
 
     if not edges:
@@ -17,8 +19,10 @@ def generate_gpx():
 
     vertices = []
     for edge in edges:
+        if('path' not in edge): continue
+        print('edge: ', edge)
         vertices.append((edge['path'][0]))
-    vertices.append(edges[-1]['path'][1])
+    'path' in edges[-1] and vertices.append(edges[-1]['path'][1])
 
     gpx = gpxpy.gpx.GPX()
     gpx_route = gpxpy.gpx.GPXRoute()
@@ -39,7 +43,7 @@ def generate_gpx():
     #             )
     #             gpx.waypoints.append(gpx_waypoint)
 
-    for lat, lon in vertices:
+    for lon, lat in vertices:
         route_point = gpxpy.gpx.GPXRoutePoint(lat, lon)
         gpx_route.points.append(route_point)
 
