@@ -20,19 +20,22 @@
   flex-direction: column;
   gap: 20px;
   display: inline-block;
+  opacity: 0;
+  transition: opacity 0.15s ease ;
 
   &.field{
     width: 200px;
   }
-
 }
 
-.find{
-  top: 20px;
-  left: 30px;
-  width: 20px!important;
-  height: 20px!important;
-  z-index: 50;
+.toggle-visible{
+  opacity: 1;
+  pointer-events: all;
+}
+
+.toggle-hidden{
+  opacity: 0;
+  pointer-events: none;
 }
 
 .tooltip{
@@ -49,6 +52,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  transition: opacity 0.15s ease ;
 
   width: 200px;
   border-radius: 10px!important;
@@ -253,10 +258,10 @@
 
 .export {
   position: absolute;
-  bottom: 30px;
-  right: 30px;
-  width: 180px;
-  height: 60px;
+  top: 80px;
+  left: 30px;
+  width: 20px;
+  height: 20px;
   z-index: 50;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.25));
   border: 2px solid rgba(255, 255, 255, 0.3);
@@ -289,4 +294,18 @@
   & .label {
     font-size: 12px;
   }
+}
+
+.find{
+  top: 20px;
+  left: 30px;
+  width: 20px!important;
+  height: 20px!important;
+  z-index: 50;
+}
+
+.disabled{
+  pointer-events: none;
+  color: gray;
+  background: rgba(195, 195, 195, 0.25);
 }

@@ -72,10 +72,10 @@ const Searchbar = () => {
       <div className="export find" onClick={handleClick}>
         <BiSearchAlt />
       </div>
-      <div style={{visibility: tooltipId > 1 ? 'visible' : 'hidden'}} className='tooltip tab'>
+      <div className={`tooltip tab ${tooltipId > 1 ? 'toggle-visible' : 'toggle-hidden'}`}>
         {errorMessege}
       </div>
-      <div className="searchbar tab" style={{visibility: searchVisible ? 'visible' : 'hidden'}}>
+      <div className={`searchbar tab ${searchVisible ? 'toggle-visible' : 'toggle-hidden'}`}>
         <div className="box">
           <form action="None" onSubmit={handleSubmit}>
             <input className="field" type="text" value={search} onChange={(e) => handleChange(e)} />

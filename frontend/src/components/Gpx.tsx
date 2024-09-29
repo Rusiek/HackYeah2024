@@ -11,7 +11,7 @@ const Gpx = () => {
   const { data: {
     singlePath
   } } = useContext(MainContext);
-  
+
   const handleClick = () => {
     getGpx(singlePath)
       .then(responce => {
@@ -29,10 +29,11 @@ const Gpx = () => {
       });
   }
 
+  console.log(singlePath)
   return (
-    <div className="export" onClick={handleClick}>
+    <div className={`export ${singlePath && singlePath.length > 0 ? '' : 'disabled'}`} onClick={handleClick}>
       <BiExport />
-      <div className="label">Export do <b>GPX</b></div>
+      {/* <div className="label">Export do <b>GPX</b></div> */}
     </div>
   );
 };
