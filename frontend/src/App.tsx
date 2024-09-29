@@ -12,8 +12,10 @@ import useTripsLayer from './hooks/useTripsLayer';
 import useAccidentsLayer from './hooks/useAccidentsLayer';
 import useMarkersLayer from './hooks/useMarkersLayer';
 import Gpx from './components/Gpx';
+import Searchbar from './components/SearchBar';
 
 registerLoaders([OBJLoader]);
+
 
 const App = () => {
   const mapRef: any = useRef();
@@ -40,6 +42,7 @@ const App = () => {
     <div>
       <Overlay />
       <Gpx />
+      <Searchbar />
       <DeckGL
         layers={layers}
         initialViewState={INITIAL_VIEW_STATE}
