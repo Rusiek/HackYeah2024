@@ -2,6 +2,7 @@ import pickle
 import networkx as nx
 from flask import Flask, request, jsonify
 from sklearn.neighbors import KDTree
+from flask_cors import CORS
 
 app = Flask(__name__)
 
@@ -32,10 +33,13 @@ def get_data():
     avoid = data['avoidUnsafe']
     velo = data['preferVelo']
 
-    start = kdTree.query([start])[1]
-    end = kdTree.query([end])[1]
-    start = (start[0][0], start[0][1])
-    end = (end[0][0], end[0][1])
+    # print(start, end, avoid, velo)
+    dist1, src = kdTree.query([start], k=1)
+    dist2, dst = kdTree.query([end], k=1)
+    src_idx = src[0][0]
+    dst_idx = dst[0][0]
+    start = tuple(kdTree.data[src_idx])
+    end = tuple(kdTree.data[dst_idx])
     
     mask = avoid * 2 + velo
     path = nx.shortest_path(G[mask], source=start, target=end, weight='weight')
