@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useEffect, useState } from "react"
 import { MapViewState } from 'deck.gl';
 import { INITIAL_VIEW_STATE } from "../utils/MapUtils";
-import { getAccidents, getPath, getPaths } from "../services/PathsService";
+import { getAccidents, getPath, getPaths, getVeloPaths } from "../services/PathsService";
 
 type MapType = {
   mapViewState: MapViewState;
@@ -11,6 +11,7 @@ type MapType = {
 type DataType = {
   paths: any;
   singlePath: any;
+  veloPaths: any;
   accidents: any;
 }
 
@@ -40,7 +41,8 @@ export const MainContext = createContext<MainContextType>({
   data: {
     paths: [],
     singlePath: [],
-    accidents: []
+    accidents: [],
+    veloPaths: []
   },
   settings: {
     selectedOption: [1, 0, 0, 0, 0],
@@ -61,6 +63,7 @@ export const MainContextProvider = ({ children }: {
   const [mapViewState, setMapViewState] = useState<MapViewState>(INITIAL_VIEW_STATE)
   const [paths, setPaths] = useState([])
   const [singlePath, setSinglePath] = useState([])
+  const [veloPaths, setVeloPaths] = useState([])
   const [accidents, setAccidents] = useState([])
   const [selectedOption, setSelectedOption] = useState([1, 0, 0, 0, 0])
   const [coordinatePickingState, setCoordinatePickingState] = useState(0)
@@ -84,6 +87,14 @@ export const MainContextProvider = ({ children }: {
     //     })
     //   })
 
+    getVeloPaths()
+      .then((data) => {
+        setVeloPaths(data.paths.map((path, index) => ({
+          vendor: index,
+          path: path,
+        })))
+      })
+
     getAccidents()
       .then((data) => {
         setAccidents(data)
@@ -98,7 +109,8 @@ export const MainContextProvider = ({ children }: {
     data: {
       paths,
       accidents,
-      singlePath
+      singlePath,
+      veloPaths
     },
     settings: {
       selectedOption,
