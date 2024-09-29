@@ -1,4 +1,4 @@
-import { useContext, useRef, useState, useEffect } from 'react'
+import { useContext, useRef } from 'react'
 import './styles/index.scss'
 
 import DeckGL from '@deck.gl/react';
@@ -12,9 +12,11 @@ import useTripsLayer from './hooks/useTripsLayer';
 import useAccidentsLayer from './hooks/useAccidentsLayer';
 import useMarkersLayer from './hooks/useMarkersLayer';
 import Gpx from './components/Gpx';
+import Searchbar from './components/SearchBar';
 import usePathfindingLayer from './hooks/usePathfindingLayer';
 
 registerLoaders([OBJLoader]);
+
 
 const App = () => {
   const mapRef: any = useRef();
@@ -43,6 +45,7 @@ const App = () => {
     <div>
       <Overlay />
       <Gpx />
+      <Searchbar />
       <DeckGL
         layers={layers}
         initialViewState={INITIAL_VIEW_STATE}

@@ -37,3 +37,12 @@ export const getWeather = (lat, long) => {
       throw error;
     });
 }
+
+export const getLocation = (location: string) => {
+  return axios.get(`https://geocoding-api.open-meteo.com/v1/search?name=${location}&count=1&language=en&format=json`)
+    .then(response => response.data)
+    .catch(error => {
+      console.error('Error fetching location:', error);
+      throw error;
+    });
+}
