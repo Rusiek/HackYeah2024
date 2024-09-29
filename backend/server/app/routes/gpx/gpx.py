@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, current_app, request, send_file
+from flask import Blueprint, jsonify, current_app, request, send_file, after_this_request
 import pandas as pd
 import gpxpy
 import os
@@ -6,7 +6,7 @@ import os
 bp_gpx = Blueprint('gpx', __name__)
 
 
-@bp_gpx.route('/generate-gpx', methods=['POST'])
+@bp_gpx.route('/', methods=['POST'])
 def generate_gpx():
   data = request.json
   route_points = data.get('route_points', [])
