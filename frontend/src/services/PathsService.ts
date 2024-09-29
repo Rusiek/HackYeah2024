@@ -64,11 +64,11 @@ export const getShortestPath = (start, end, avoidUnsafe, preferVelo) => {
 }
 
 export const getGpx = (edgeList) => {
-  return axios.post(`${API_BASE_URL}/gpx/`, JSON.stringify({edges: edgeList}), {
-    headers: {
-        'Content-Type': 'application/json'
-    }
-})
+  return axios.post(
+    `${API_BASE_URL}/gpx/`, 
+    JSON.stringify({edges: edgeList}), {
+    headers: {'Content-Type': 'application/json'}}
+  )
     .then(response => response.data)
     .catch(error => {
       console.error('Error fetching paths:', error);
