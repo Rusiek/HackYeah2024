@@ -3,12 +3,12 @@ import { MainContext } from '../context/MainContext';
 import { HeatmapLayer } from '@deck.gl/aggregation-layers';
 
 const useAccidentsLayer = () => {
-  const { settings: { selectedOption }, data: { accidents } } = useContext(MainContext)
+  const { data: { accidents, showAccidents } } = useContext(MainContext)
   const mappedAccidents = useMemo(() => {
     return accidents.map((accident) => [+accident.long, +accident.lat, 1])
   }, [accidents])
 
-  if (!selectedOption?.[1]) return null
+  if (!showAccidents) return null
 
   return new HeatmapLayer<DataPoint>({
     data: mappedAccidents,
@@ -25,7 +25,7 @@ const useAccidentsLayer = () => {
     ],
     pickable: true,
     onClick: (d) => {
-      console.log("DUZY CHUJ", d)
+      console.log("heatmap clicked", d)
     }
   })
 };

@@ -4,7 +4,7 @@ import { TripsLayer } from '@deck.gl/geo-layers';
 import { getShortestPath } from '../services/PathsService';
 
 const usePathfindingLayer = () => {
-  const { settings: { startPosition, endPosition, selectedOption, setSinglePath, setFailedLoad, failedLoad }, data: { singlePath } } = useContext(MainContext)
+  const { settings: { startPosition, endPosition, setSinglePath, setFailedLoad, failedLoad }, data: { singlePath, avoidDangerous, preferVelo } } = useContext(MainContext)
 
 
   const theme = {
@@ -21,7 +21,7 @@ const usePathfindingLayer = () => {
 
   useEffect(() => {
     if (startPosition != null && endPosition != null) {
-      getShortestPath(startPosition, endPosition, selectedOption?.[2] == 1 ? true : false, selectedOption?.[4] == 1 ? true : false)
+      getShortestPath(startPosition, endPosition, avoidDangerous, preferVelo)
       .then(response => {
         setSinglePath(response.map((path, index) => ({
           vendor: path.risk,
@@ -33,7 +33,7 @@ const usePathfindingLayer = () => {
         _setFailedLoad()
       })
     }
-  }, [startPosition, endPosition, selectedOption])
+  }, [startPosition, endPosition, avoidDangerous, preferVelo])
 
   if (!startPosition || !endPosition) return null
 
@@ -44,7 +44,7 @@ const usePathfindingLayer = () => {
     getTimestamps: d => d.timestamps,
     getColor: d => d.vendor == 'lo' ? [0, 255, 0] : d.vendor == 'mid' ? [255, 128, 0] : [255, 0, 0],
     opacity: 1,
-    widthMinPixels: 3,
+    widthMinPixels: 6,
     rounded: true,
     fadeTrail: false,
     currentTime: Infinity,

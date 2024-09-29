@@ -13,7 +13,11 @@ type DataType = {
   singlePath: any;
   veloPaths: any;
   accidents: any;
+  roadSafetyEnabled: boolean;
   showVeloMaps: boolean;
+  showAccidents: boolean; 
+  avoidDangerous: boolean;
+  preferVelo: boolean;
 }
 
 type SettingsType = {
@@ -26,9 +30,13 @@ type SettingsType = {
   setStartPosition: any;
   setEndPosition: any;
   setSinglePath: any;
-  setShowVeloMaps: any;
   failedLoad: number;
   setFailedLoad: any;
+  setRoadSafetyEnabled: any;
+  setShowVeloMaps: any;
+  setShowAccidents: any;
+  setAvoidDangerous: any;
+  setPreferVelo: any;
 }
 
 type MainContextType = {
@@ -47,7 +55,11 @@ export const MainContext = createContext<MainContextType>({
     singlePath: [],
     accidents: [],
     veloPaths: [],
+    roadSafetyEnabled: false,
     showVeloMaps: false,
+    showAccidents: false,
+    avoidDangerous: false,
+    preferVelo: false
   },
   settings: {
     selectedOption: [1, 0, 0, 0, 0],
@@ -59,9 +71,13 @@ export const MainContext = createContext<MainContextType>({
     setStartPosition: () => { },
     setEndPosition: () => { },
     setSinglePath: () => { },
-    setShowVeloMaps: () => { },
     failedLoad: 0,
-    setFailedLoad: () => { }
+    setFailedLoad: () => { },
+    setRoadSafetyEnabled: () => { },
+    setShowVeloMaps: () => { },
+    setShowAccidents: () => { },
+    setAvoidDangerous: () => { },
+    setPreferVelo: () => { }
   }
 })
 
@@ -77,8 +93,15 @@ export const MainContextProvider = ({ children }: {
   const [coordinatePickingState, setCoordinatePickingState] = useState(0)
   const [startPosition, setStartPosition] = useState<number[] | null>(null);
   const [endPosition, setEndPosition] = useState<number[] | null>(null);
-  const [showVeloMaps, setShowVeloMaps] = useState(false)
+  
   const [failedLoad, setFailedLoad] = useState<number>(-1);
+
+  // buttons states
+  const [roadSafetyEnabled, setRoadSafetyEnabled] = useState(false);
+  const [showVeloMaps, setShowVeloMaps] = useState(false);
+  const [showAccidents, setShowAccidents] = useState(false);
+  const [avoidDangerous, setAvoidDangerous] = useState(false);
+  const [preferVelo, setPreferVelo] = useState(false);
 
   useEffect(() => {
     getPaths()
@@ -121,7 +144,11 @@ export const MainContextProvider = ({ children }: {
       accidents,
       singlePath,
       veloPaths,
-      showVeloMaps
+      roadSafetyEnabled,
+      showVeloMaps,
+      showAccidents,
+      avoidDangerous,
+      preferVelo
     },
     settings: {
       selectedOption,
@@ -133,9 +160,13 @@ export const MainContextProvider = ({ children }: {
       setStartPosition,
       setEndPosition,
       setSinglePath,
-      setShowVeloMaps,
       failedLoad,
-      setFailedLoad
+      setFailedLoad,
+      setRoadSafetyEnabled,
+      setShowVeloMaps,
+      setShowAccidents,
+      setAvoidDangerous,
+      setPreferVelo
     }
   }}>
     {children}

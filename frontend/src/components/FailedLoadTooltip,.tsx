@@ -15,5 +15,5 @@ const FailedLoadTooltip = () => {
     </div>
   );
 }
- 
+
 export default FailedLoadTooltip;

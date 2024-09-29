@@ -11,17 +11,15 @@ import { FaMapLocation } from "react-icons/fa6";
 
 const Overlay = () => {
   const { settings: {
-    selectedOption, setSelectedOption, coordinatePickingState, setCoordinatePickingState, startPosition, endPosition,
-    setStartPosition, setEndPosition, setShowVeloMaps
-  }, data: { showVeloMaps } } = useContext(MainContext);
-
-  const changeOption = (id) => {
-    setSelectedOption(prev => {
-      const newOption = [...prev]
-      newOption[id] = (newOption[id] + 1) % 2
-      return newOption
-    })
-  }
+    coordinatePickingState, setCoordinatePickingState, startPosition, endPosition,
+    setStartPosition, setEndPosition, setRoadSafetyEnabled, setShowVeloMaps, setShowAccidents, setAvoidDangerous, setPreferVelo,
+  }, data: { 
+    roadSafetyEnabled,
+    showVeloMaps,
+    showAccidents,
+    avoidDangerous,
+    preferVelo
+  } } = useContext(MainContext);
 
   return (
     <div className="overlay">
@@ -61,17 +59,17 @@ const Overlay = () => {
           </div>
         </div>
         <div className="buttons">
-          <button onClick={() => changeOption(0)} className={`${selectedOption?.[0] == 1 && "active"}`} style={{
+          <button onClick={() => setRoadSafetyEnabled(!roadSafetyEnabled)} className={`${roadSafetyEnabled && "active"}`} style={{
             width: 'calc(100% - 20px)'
           }}>
             <AiOutlineSafety />
             <span>Bezpieczeństwo tras</span>
           </button>
-          <button onClick={() => changeOption(1)} className={`${selectedOption?.[1] == 1 && "active"}`}>
+          <button onClick={() => setShowAccidents(!showAccidents)} className={`${showAccidents && "active"}`}>
             <FaCarCrash />
             <span>Wypadki z udziałem rowerów</span>
           </button>
-          <button onClick={() => changeOption(3)} className={`${selectedOption?.[3] == 1 && "active"}`}>
+          <button onClick={() => setAvoidDangerous(!avoidDangerous)} className={`${avoidDangerous && "active"}`}>
             <FaRoad />
             <span>Unikaj niebezpiecznych tras</span>
           </button>
@@ -79,7 +77,7 @@ const Overlay = () => {
             <FaMapLocation />
             <span>Wyświetl ścieżki <b>VELO</b></span>
           </button>
-          <button onClick={() => changeOption(2)} className={`${selectedOption?.[2] == 1 && "active"}`}>
+          <button onClick={() => setPreferVelo(!preferVelo)} className={`${preferVelo && "active"}`}>
             <MdDirectionsBike />
             <span>Preferuj ścieżki <b>VELO</b></span>
           </button>

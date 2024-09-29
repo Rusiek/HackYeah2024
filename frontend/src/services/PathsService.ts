@@ -58,7 +58,7 @@ export const getLocation = (location: string) => {
     });
 }
 
-export const getShortestPath = (start, end, avoidUnsafe, preferVelo) => {
+export const getShortestPath = (start, end, preferVelo, avoidUnsafe) => {
   return axios.post(`${ROUTES_BASE_API_URL}/get_data`, {
     start: start,
     end: end,
