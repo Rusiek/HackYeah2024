@@ -49,7 +49,13 @@ def get_data():
     end = tuple(kdTree.data[dst_idx])
     
     mask = avoid * 2 + velo
-    path = nx.astar_path(G[mask], source=start, target=end, weight='weight')
+    
+    path = None
+    try:
+      path = nx.astar_path(G[mask], source=start, target=end, weight='weight')
+    except nx.NetworkXNoPath:
+      return jsonify({'error': {'type': 'Internal server error', 'messege': 'The path could not be determined'}, 'code': '500 '}), 500
+      
     for i in range(len(path) - 1):
         response_dict = {}
         response_dict['path'] = [list(path[i]), list(path[i + 1])]
