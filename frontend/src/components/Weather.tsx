@@ -33,7 +33,7 @@ const Weather = () => {
           </div>
           <div className="description">
             Słonecznie<br />
-            <div className="pm10"><PiWind /> PM10: <b>43,3 μm</b></div>
+            <div className="pm10"><PiWind /> PM10: <b>27,3 μg/m³</b></div>
           </div>
         </div>
       </div>

@@ -17,7 +17,7 @@ const useVeloRoutesLayer = () => {
     getPath: d => d.path,
     getTimestamps: d => d.timestamps,
     getColor: d => theme.trailColor,
-    opacity: 1,
+    opacity: 0.05,
     widthMinPixels: 3,
     rounded: true,
     fadeTrail: false,
