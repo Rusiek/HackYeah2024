@@ -57,7 +57,6 @@ def generate_gpx():
     # Clean up the file after sending
     @after_this_request
     def cleanup(response):
-        os.remove(new_file_path)
         return response
 
     return response
