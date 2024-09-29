@@ -19,7 +19,7 @@ def get_path():
   response_dict = {}
   response_dict['paths'] = all_paths
 
-    # Use ast.literal_eval for safe evaluation
+  # Use ast.literal_eval for safe evaluation
   return jsonify(response_dict)
 
 @bp_paths.route('/<id>', methods=['GET'])
