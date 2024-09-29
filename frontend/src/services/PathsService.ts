@@ -62,3 +62,15 @@ export const getShortestPath = (start, end, avoidUnsafe, preferVelo) => {
       throw error;
     });
 }
+
+export const getGpx = (route_points, get_waypoints) => {
+  return axios.post(`${ROUTES_BASE_API_URL}/gpx`, {
+    route_points: route_points,
+    get_waypoints: get_waypoints
+  })
+    .then(response => response.data)
+    .catch(error => {
+      console.error('Error fetching paths:', error);
+      throw error;
+    });
+}
