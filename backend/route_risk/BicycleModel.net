@@ -73,7 +73,7 @@ potential (strava_popularity |)
 
 potential (here_jam_factor |)
 {
-    data = (0.20000000 0.30000000 0.50000000);
+    data = (0.40000000 0.40000000 0.20000000);
 }
 
 potential (here_flow_speed |)
@@ -99,22 +99,22 @@ potential (road_current_speed | here_flow_speed here_speed_cap)
         (0.02000000 0.08000000 0.90000000)));
 }
 
-potential (road_traffic | here_jam_factor road_current_speed)
+potential (road_traffic | road_current_speed here_jam_factor)
 {
     data = (((0.90000000 0.10000000)
-        (0.85000000 0.15000000)
-        (0.80000000 0.20000000))
-        ((0.55000000 0.45000000)
+        (0.55000000 0.45000000)
+        (0.20000000 0.80000000))
+        ((0.85000000 0.15000000)
         (0.50000000 0.50000000)
-        (0.45000000 0.55000000))
+        (0.15000000 0.85000000))
         ((0.20000000 0.80000000)
-        (0.15000000 0.85000000)
-        (0.10000000 0.90000000)));
+        (0.10000000 0.90000000)
+        (0.01000000 0.99000000)));
 }
 
 potential (strava_hazardous |)
 {
-    data = (0.80000000 0.20000000);
+    data = (0.90000000 0.10000000);
 }
 
 potential (road_recom | strava_popularity strava_hazardous)
