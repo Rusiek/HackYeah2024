@@ -1,8 +1,13 @@
 import pickle
+import time
+
 import networkx as nx
 from flask import Flask, request, jsonify
 from sklearn.neighbors import KDTree
 from flask_cors import CORS
+import os
+
+from graph import update
 
 app = Flask(__name__)
 
@@ -10,16 +15,16 @@ CORS(app)
 
 G = []
 
-with open('backend/route_risk/nx_graph_00.pkl', 'rb') as f:
+with open(os.path.join(os.path.dirname(__file__), 'nx_graph_00.pkl'), 'rb') as f:
     G.append(pickle.load(f))
 
-with open('backend/route_risk/nx_graph_01.pkl', 'rb') as f:
+with open(os.path.join(os.path.dirname(__file__), 'nx_graph_01.pkl'), 'rb') as f:
     G.append(pickle.load(f))
 
-with open('backend/route_risk/nx_graph_10.pkl', 'rb') as f:
+with open(os.path.join(os.path.dirname(__file__), 'nx_graph_10.pkl'), 'rb') as f:
     G.append(pickle.load(f))
 
-with open('backend/route_risk/nx_graph_11.pkl', 'rb') as f:
+with open(os.path.join(os.path.dirname(__file__), 'nx_graph_11.pkl'), 'rb') as f:
     G.append(pickle.load(f))
 
 nodes = list(G[0].nodes())
@@ -61,5 +66,11 @@ def get_edges():
         edges.append(response_dict)
     return jsonify(edges)
 
+def actualize_traffic():
+    while True:
+        update()
+        time.sleep(5000)
+
 if __name__ == '__main__':
     app.run('127.0.0.1', 5005, debug=True)
+    actualize_traffic()
