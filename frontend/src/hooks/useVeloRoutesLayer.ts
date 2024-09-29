@@ -3,9 +3,9 @@ import { MainContext } from '../context/MainContext';
 import { TripsLayer } from '@deck.gl/geo-layers';
 
 const useVeloRoutesLayer = () => {
-  const { settings: { selectedOption }, data: { veloPaths } } = useContext(MainContext)
+  const { data: { veloPaths, showVeloMaps } } = useContext(MainContext)
 
-  if (selectedOption?.[4] != 1 ) return null;
+  if (!showVeloMaps) return null;
 
   const theme = {
     trailColor: [255, 255, 255]

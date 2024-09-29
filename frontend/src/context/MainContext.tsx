@@ -13,6 +13,7 @@ type DataType = {
   singlePath: any;
   veloPaths: any;
   accidents: any;
+  showVeloMaps: boolean;
 }
 
 type SettingsType = {
@@ -25,6 +26,7 @@ type SettingsType = {
   setStartPosition: any;
   setEndPosition: any;
   setSinglePath: any;
+  setShowVeloMaps: any;
 }
 
 type MainContextType = {
@@ -42,7 +44,8 @@ export const MainContext = createContext<MainContextType>({
     paths: [],
     singlePath: [],
     accidents: [],
-    veloPaths: []
+    veloPaths: [],
+    showVeloMaps: false,
   },
   settings: {
     selectedOption: [1, 0, 0, 0, 0],
@@ -54,6 +57,7 @@ export const MainContext = createContext<MainContextType>({
     setStartPosition: () => { },
     setEndPosition: () => { },
     setSinglePath: () => { },
+    setShowVeloMaps: () => { },
   }
 })
 
@@ -69,6 +73,7 @@ export const MainContextProvider = ({ children }: {
   const [coordinatePickingState, setCoordinatePickingState] = useState(0)
   const [startPosition, setStartPosition] = useState<number[] | null>(null);
   const [endPosition, setEndPosition] = useState<number[] | null>(null);
+  const [showVeloMaps, setShowVeloMaps] = useState(false)
 
   useEffect(() => {
     getPaths()
@@ -110,7 +115,8 @@ export const MainContextProvider = ({ children }: {
       paths,
       accidents,
       singlePath,
-      veloPaths
+      veloPaths,
+      showVeloMaps
     },
     settings: {
       selectedOption,
@@ -122,6 +128,7 @@ export const MainContextProvider = ({ children }: {
       setStartPosition,
       setEndPosition,
       setSinglePath,
+      setShowVeloMaps
     }
   }}>
     {children}
