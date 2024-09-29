@@ -14,7 +14,10 @@ const usePathfindingLayer = () => {
     if (startPosition != null && endPosition != null) {
       getShortestPath(startPosition, endPosition, selectedOption?.[2] == 1 ? true : false, selectedOption?.[4] == 1 ? true : false)
       .then(response => {
-        console.log(response)
+        setSinglePath(response.map((path, index) => ({
+          vendor: path.risk,
+          path: path.path,
+        })))
       })
     }
   }, [startPosition, endPosition, selectedOption])
@@ -23,10 +26,10 @@ const usePathfindingLayer = () => {
 
   return new TripsLayer<Trip>({
     id: 'pathfinding',
-    data: [singlePath],
+    data: singlePath,
     getPath: d => d.path,
     getTimestamps: d => d.timestamps,
-    getColor: d => theme.trailColor,
+    getColor: d => d.vendor == 'lo' ? [0, 255, 0] : d.vendor == 'mid' ? [255, 255, 0] : [255, 0, 0],
     opacity: 1,
     widthMinPixels: 3,
     rounded: true,

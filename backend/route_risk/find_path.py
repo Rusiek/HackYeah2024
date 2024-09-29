@@ -44,7 +44,10 @@ def get_data():
     mask = avoid * 2 + velo
     path = nx.shortest_path(G[mask], source=start, target=end, weight='weight')
     for i in range(len(path) - 1):
-        path[i] = [list(path[i]), list(path[i + 1]), G[mask][path[i]][path[i + 1]]['risk']]
+        response_dict = {}
+        response_dict['path'] = [list(path[i]), list(path[i + 1])]
+        response_dict['risk'] = G[mask][path[i]][path[i + 1]]['risk']
+        path[i] = response_dict
 
     return jsonify(path)
 
