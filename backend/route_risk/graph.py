@@ -8,6 +8,7 @@ from tqdm import tqdm
 import json
 import pickle
 import ast
+import os
 
 def update():
 
@@ -20,7 +21,7 @@ def update():
     for e in tqdm(results):
         current_flow = e.get('currentFlow')
         speed_limit = e.get('speed')
-        if speed_limit > 27.78:
+        if speed_limit and speed_limit > 27.78:
             continue
         loc = e.get('location')
         shape = loc.get('shape')
@@ -42,7 +43,7 @@ def update():
             unique_verticies.append(verticies[i])
 
     # print(len(unique_verticies))
-    KDTree = KDTree(unique_verticies)
+    kdTree = KDTree(unique_verticies)
 
     with open('strava/segments_info2.json') as f2:
         data_strava = json.load(f2)
@@ -53,7 +54,7 @@ def update():
             points = item['map']['polyline']
             for p in points:
                 p = p[::-1]
-                dist, ind = KDTree.query([p], k=1)
+                dist, ind = kdTree.query([p], k=1)
                 if dist > eps:
                     unique_verticies.append(p)
 
@@ -102,18 +103,18 @@ def update():
             for i in range(1, len(points)):
                 src = (points[i-1][1], points[i-1][0])
                 dst = (points[i][1], points[i][0])
-                dist1, src1 = KDTree.query([list(src)], k=1)
-                dist2, dst1 = KDTree.query([list(dst)], k=1)
+                dist1, src1 = kdTree.query([list(src)], k=1)
+                dist2, dst1 = kdTree.query([list(dst)], k=1)
 
                 # Convert src1 and dst1 (index arrays) into integers, then retrieve the corresponding coordinates
                 src_idx = src1[0][0]  # Get the index for the nearest point to src
                 dst_idx = dst1[0][0]  # Get the index for the nearest point to dst
 
-                # Now use those indices to get the coordinates from the original KDTree data
+                # Now use those indices to get the coordinates from the original kdTree data
                 if dist1 < eps:
-                    src = tuple(KDTree.data[src_idx])
+                    src = tuple(kdTree.data[src_idx])
                 if dist2 < eps:
-                    dst = tuple(KDTree.data[dst_idx])
+                    dst = tuple(kdTree.data[dst_idx])
                 if len(src) != 2 or len(dst) != 2:
                     continue
                 if not dst in G[src]:
@@ -144,15 +145,15 @@ def update():
         for i in range(1, len(path)):
             src = (path[i-1][0], path[i-1][1])
             dst = (path[i][0], path[i][1])
-            dist1, src1 = KDTree.query([list(src)], k=1)
-            dist2, dst1 = KDTree.query([list(dst)], k=1)
+            dist1, src1 = kdTree.query([list(src)], k=1)
+            dist2, dst1 = kdTree.query([list(dst)], k=1)
             src_idx = src1[0][0]
             dst_idx = dst1[0][0]
 
             if dist1 < eps:
-                src = tuple(KDTree.data[src_idx])
+                src = tuple(kdTree.data[src_idx])
             if dist2 < eps:
-                dst = tuple(KDTree.data[dst_idx])
+                dst = tuple(kdTree.data[dst_idx])
 
             if(len(src) != 2 or len(dst) != 2):
                 continue
