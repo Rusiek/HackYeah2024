@@ -15,6 +15,8 @@ CORS(app)
 
 G = []
 
+update()
+
 with open(os.path.join(os.path.dirname(__file__), 'nx_graph_00.pkl'), 'rb') as f:
     G.append(pickle.load(f))
 
@@ -68,8 +70,20 @@ def get_edges():
 
 def actualize_traffic():
     while True:
+        time.sleep(600)
+        G = []
         update()
-        time.sleep(5000)
+        with open(os.path.join(os.path.dirname(__file__), 'nx_graph_00.pkl'), 'rb') as f:
+            G.append(pickle.load(f))
+
+        with open(os.path.join(os.path.dirname(__file__), 'nx_graph_01.pkl'), 'rb') as f:
+            G.append(pickle.load(f))
+
+        with open(os.path.join(os.path.dirname(__file__), 'nx_graph_10.pkl'), 'rb') as f:
+            G.append(pickle.load(f))
+
+        with open(os.path.join(os.path.dirname(__file__), 'nx_graph_11.pkl'), 'rb') as f:
+            G.append(pickle.load(f))
 
 if __name__ == '__main__':
     app.run('127.0.0.1', 5005, debug=True)

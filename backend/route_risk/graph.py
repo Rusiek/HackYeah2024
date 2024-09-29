@@ -11,7 +11,6 @@ import ast
 import os
 
 def update():
-
     with open('backend/server/app/routes/cars/data/traffic_data.json') as f:
         data_here = json.load(f)
 
@@ -20,8 +19,8 @@ def update():
     idx = 1
     for e in tqdm(results):
         current_flow = e.get('currentFlow')
-        speed_limit = e.get('speed')
-        if speed_limit and speed_limit > 27.78:
+        speed_limit = current_flow.get('speed')
+        if speed_limit and speed_limit > 25:
             continue
         loc = e.get('location')
         shape = loc.get('shape')
@@ -70,6 +69,9 @@ def update():
     for e in tqdm(results):
         loc = e.get('location')
         current_flow = e.get('currentFlow')
+        speed_limit = current_flow.get('speed')
+        if speed_limit and speed_limit > 25:
+            continue
         shape = loc.get('shape')
         links = shape.get('links')
         for p in links:
@@ -270,5 +272,3 @@ def update():
 
     with open('backend/route_risk/nx_graph_11.pkl', 'wb') as f:
         pickle.dump(nx_graph_11, f)
-
-    print(nx_graph_00.edges(data=True))
