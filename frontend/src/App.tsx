@@ -1,4 +1,4 @@
-import { useContext, useRef, useState, useEffect } from 'react'
+import { useContext, useRef } from 'react'
 import './styles/index.scss'
 
 import DeckGL from '@deck.gl/react';
