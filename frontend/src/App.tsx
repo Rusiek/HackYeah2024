@@ -15,6 +15,7 @@ import Gpx from './components/Gpx';
 import Searchbar from './components/SearchBar';
 import usePathfindingLayer from './hooks/usePathfindingLayer';
 import FailedLoadTooltip from './components/FailedLoadTooltip,';
+import useVeloRoutesLayer from './hooks/useVeloRoutesLayer';
 
 registerLoaders([OBJLoader]);
 
@@ -34,12 +35,14 @@ const App = () => {
   const accidentsLayer = useAccidentsLayer()
   const markersLayer = useMarkersLayer()
   const pathfindingLayer = usePathfindingLayer()
+  const veloRoutesLayer = useVeloRoutesLayer()
 
   const layers = [
     tripsLayer,
     accidentsLayer,
     markersLayer,
-    pathfindingLayer
+    pathfindingLayer,
+    veloRoutesLayer
   ];
 
   return (

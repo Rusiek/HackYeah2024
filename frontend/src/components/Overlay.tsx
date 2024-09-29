@@ -12,8 +12,8 @@ import { FaMapLocation } from "react-icons/fa6";
 const Overlay = () => {
   const { settings: {
     selectedOption, setSelectedOption, coordinatePickingState, setCoordinatePickingState, startPosition, endPosition,
-    setStartPosition, setEndPosition
-  } } = useContext(MainContext);
+    setStartPosition, setEndPosition, setShowVeloMaps
+  }, data: { showVeloMaps } } = useContext(MainContext);
 
   const changeOption = (id) => {
     setSelectedOption(prev => {
@@ -75,7 +75,7 @@ const Overlay = () => {
             <FaRoad />
             <span>Unikaj niebezpiecznych tras</span>
           </button>
-          <button onClick={() => changeOption(4)} className={`${selectedOption?.[4] == 1 && "active"}`}>
+          <button onClick={() => setShowVeloMaps(!showVeloMaps)} className={`${showVeloMaps && "active"}`}>
             <FaMapLocation />
             <span>Wyświetl ścieżki <b>VELO</b></span>
           </button>
